@@ -3,29 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_transform">
+    app:startDestination="@+id/nav_transaksi">
 
     <fragment
-        android:id="@+id/nav_transform"
-        android:name="com.mog.bondoman.ui.transform.TransformFragment"
-        android:label="@string/menu_transform"
-        tools:layout="@layout/fragment_transform" />
+        android:id="@+id/nav_transaksi"
+        android:name="com.mog.bondoman.ui.transaksi.TransaksiFragment"
+        android:label="@string/menu_transaksi"
+        tools:layout="@layout/fragment_transaksi" />
 
     <fragment
-        android:id="@+id/nav_reflow"
-        android:name="com.mog.bondoman.ui.reflow.ReflowFragment"
-        android:label="@string/menu_reflow"
-        tools:layout="@layout/fragment_reflow" />
+        android:id="@+id/nav_scan"
+        android:name="com.mog.bondoman.ui.scan.ScanFragment"
+        android:label="@string/menu_scan"
+        tools:layout="@layout/fragment_scan" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.mog.bondoman.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        android:id="@+id/nav_graf"
+        android:name="com.mog.bondoman.ui.graf.GrafFragment"
+        android:label="@string/menu_graf"
+        tools:layout="@layout/fragment_graf" />
 
     <fragment
-        android:id="@+id/nav_settings"
-        android:name="com.mog.bondoman.ui.settings.SettingsFragment"
-        android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings" />
+        android:id="@+id/nav_pengaturan"
+        android:name="com.mog.bondoman.ui.pengaturan.PengaturanFragment"
+        android:label="@string/menu_pengaturan"
+        tools:layout="@layout/fragment_pengaturan" />
 </navigation>

@@ -26,4 +26,8 @@
     <string name="image_view_item_transform_content_description">Represents an image view in the
         item
     </string>
+    <string name="menu_transaksi">Transaksi</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_graf">Graf</string>
+    <string name="menu_pengaturan">Pengaturan</string>
 </resources>
