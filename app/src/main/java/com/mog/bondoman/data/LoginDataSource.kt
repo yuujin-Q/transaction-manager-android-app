@@ -55,8 +55,4 @@ class LoginDataSource(private val apiClient: ApiClient) {
             }
         }
     }
-
-    fun logout() {
-        // TODO: revoke authentication
-    }
 }

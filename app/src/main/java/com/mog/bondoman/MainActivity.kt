@@ -1,18 +1,29 @@
 package com.mog.bondoman
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.ActivityMainBinding
+import com.mog.bondoman.service.JwtService
 
 class MainActivity : AppCompatActivity() {
 
     //    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private lateinit var jwtServiceIntent: Intent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        SessionManager.initialize(applicationContext)
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
+        jwtServiceIntent = Intent(this, JwtService::class.java)
         setContentView(binding.root)
+
+        startService(jwtServiceIntent)
 //        setSupportActionBar(binding.appBarMain.toolbar)
 //
 //        val navHostFragment =
@@ -67,5 +78,10 @@ class MainActivity : AppCompatActivity() {
 //    override fun onSupportNavigateUp(): Boolean {
 //        val navController = findNavController(R.id.nav_host_fragment_content_main)
 //        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopService(jwtServiceIntent)
     }
 }

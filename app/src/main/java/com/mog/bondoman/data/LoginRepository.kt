@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
  */
 
 class LoginRepository(val dataSource: LoginDataSource, val context: Context) {
-    private val sessionManager = SessionManager(context)
+    private val sessionManager = SessionManager.getInstance()
 
     // in-memory cache of the loggedInUser object
     var user: LoggedInUser? = null
@@ -25,11 +25,6 @@ class LoginRepository(val dataSource: LoginDataSource, val context: Context) {
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
         user = null
-    }
-
-    fun logout() {
-        user = null
-        dataSource.logout()
     }
 
     suspend fun login(username: String, password: String): Result<LoggedInUser> {
@@ -45,9 +40,13 @@ class LoginRepository(val dataSource: LoginDataSource, val context: Context) {
         }
     }
 
-    private fun setLoggedInUser(loggedInUser: LoggedInUser) {
+    private fun setLoggedInUser(loggedInUser: LoggedInUser?) {
         this.user = loggedInUser
-        sessionManager.saveAuthToken(loggedInUser.token)
+        if (loggedInUser == null) {
+            sessionManager.removeAuthToken()
+        } else {
+            sessionManager.saveAuthToken(loggedInUser.nim, loggedInUser.token)
+        }
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }

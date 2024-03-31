@@ -1,5 +1,8 @@
 package com.mog.bondoman.ui.login
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -20,6 +23,16 @@ class LoginFragment : Fragment() {
 
     private lateinit var loginViewModel: LoginViewModel
     private var _binding: FragmentLoginBinding? = null
+    private val broadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "TOKEN_CHECK") {
+                val isValid = intent.getBooleanExtra("TOKEN_CHECK_IS_VALID", false)
+                if (isValid) {
+                    findNavController().navigate(R.id.navigate_to_home)
+                }
+            }
+        }
+    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.

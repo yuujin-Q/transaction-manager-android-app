@@ -11,7 +11,7 @@ import com.mog.bondoman.data.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -24,7 +24,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = loginRepository.login(username, password)) {
                 is Result.Success -> {
-                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = result.data.displayName)))
+                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = result.data.nim)))
                 }
 
                 else -> {
