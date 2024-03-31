@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_navigation"
+    app:startDestination="@id/login_page">
+    <!--    default to home fragment-->
+    <!--    from home: call login-->
+    <!--    after login, pops back login to go back to home-->
+
+    <fragment
+        android:id="@+id/login_page"
+        android:name="com.mog.bondoman.ui.login.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/navigate_to_home"
+            app:destination="@+id/home_page"
+            app:popUpTo="@id/login_page"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/home_page"
+        android:name="com.mog.bondoman.ui.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+
+</navigation>
