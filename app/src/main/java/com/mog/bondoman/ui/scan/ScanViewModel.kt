@@ -18,32 +18,35 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
+import com.mog.bondoman.data.connection.ApiService
 
 class ScanViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is Scan Fragment"
-    }
-    val text: LiveData<String> = _text
-
+    // Inisialisasi Retrofit
     private val apiService: ApiService
 
     init {
         val retrofit = Retrofit.Builder()
-            .baseUrl("{{baseUrl}}") // Ganti dengan URL base endpoint server Anda
+            // Ganti baseUrl dengan URL base endpoint server Anda
+            .baseUrl("https://pbd-backend-2024.vercel.app/")
             .client(OkHttpClient.Builder().build())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+        // Inisialisasi ApiService
         apiService = retrofit.create(ApiService::class.java)
     }
 
-    // Fungsi untuk mengirim gambar ke server
+    // Metode untuk mengunggah gambar ke server
     fun uploadImage(imageBitmap: Bitmap) {
+        // Konversi Bitmap ke File
         val file = bitmapToFile(imageBitmap, getApplication())
+        // Konversi File ke RequestBody
         val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
+        // Buat bagian multipart dari gambar
         val body = MultipartBody.Part.createFormData("file", file.name, requestFile)
 
+        // Kirim permintaan mengunggah gambar ke server
         apiService.uploadImage(body).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 // Tangani respons dari server jika diperlukan
@@ -55,7 +58,7 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    // Fungsi untuk mengubah Bitmap menjadi File
+    // Metode untuk mengubah Bitmap menjadi File
     private fun bitmapToFile(bitmap: Bitmap, context: Context): File {
         val file = File(context.cacheDir, "temp_image.jpg")
         file.createNewFile()
@@ -68,3 +71,4 @@ class ScanViewModel(application: Application) : AndroidViewModel(application) {
         return file
     }
 }
+
