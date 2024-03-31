@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mog.bondoman.data.LoginDataSource
 import com.mog.bondoman.data.LoginRepository
+import com.mog.bondoman.data.connection.ApiClient
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.
@@ -16,7 +17,7 @@ class LoginViewModelFactory : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(
                 loginRepository = LoginRepository(
-                    dataSource = LoginDataSource()
+                    dataSource = LoginDataSource(apiClient = ApiClient())
                 )
             ) as T
         }
