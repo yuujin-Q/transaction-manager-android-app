@@ -3,13 +3,15 @@ package com.mog.bondoman
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
-import com.google.android.material.navigation.NavigationView
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import androidx.appcompat.app.AppCompatActivity
 import com.mog.bondoman.databinding.ActivityMainBinding
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,39 +22,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        setSupportActionBar(binding.appBarMain.toolbar)
-//
-//        binding.appBarMain.fab?.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
-//
-//        val navHostFragment =
-//            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment?)!!
-//        val navController = navHostFragment.navController
-//
-//        binding.navView?.let {
-//            appBarConfiguration = AppBarConfiguration(
-//                setOf(
-//                    R.id.nav_transform, R.id.nav_reflow, R.id.nav_slideshow, R.id.nav_settings
-//                ),
-//                binding.drawerLayout
-//            )
-//            setupActionBarWithNavController(navController, appBarConfiguration)
-//            it.setupWithNavController(navController)
-//        }
-//
-//        binding.appBarMain.contentMain.bottomNavView?.let {
-//            appBarConfiguration = AppBarConfiguration(
-//                setOf(
-//                    R.id.nav_transform, R.id.nav_reflow, R.id.nav_slideshow
-//                )
-//            )
-//            setupActionBarWithNavController(navController, appBarConfiguration)
-//            it.setupWithNavController(navController)
-//        }
+        setSupportActionBar(binding.appBarMain.toolbar)
 
-//
+        val navHostFragment =
+            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment?)!!
+        val navController = navHostFragment.navController
+
+        binding.navView?.let {
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graf, R.id.nav_settings
+                ),
+                binding.drawerLayout
+            )
+            setupActionBarWithNavController(navController, appBarConfiguration)
+            it.setupWithNavController(navController)
+        }
+
+        binding.appBarMain.contentMain.bottomNavView?.let {
+            appBarConfiguration = AppBarConfiguration(
+                setOf(
+                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graf
+                )
+            )
+            setupActionBarWithNavController(navController, appBarConfiguration)
+            it.setupWithNavController(navController)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
