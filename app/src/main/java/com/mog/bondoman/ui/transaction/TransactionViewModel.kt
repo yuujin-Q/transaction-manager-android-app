@@ -1,42 +1,57 @@
 package com.mog.bondoman.ui.transaction
 
-import android.location.Location
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mog.bondoman.model.Transaction
+import com.mog.bondoman.repository.TransactionRepository
 import java.util.Date
+import java.util.UUID
 
-class TransactionViewModel : ViewModel() {
+class TransactionViewModel() : ViewModel() {
 
-    private val _transactions = MutableLiveData<List<Transaction>>()
+    private lateinit var transactionRepository: TransactionRepository
 
-//    TODO REMOVE THIS METHOD
+    private val _transactions = MutableLiveData<MutableList<Transaction>>()
+    val transactions: LiveData<MutableList<Transaction>> = _transactions
+
+    fun setRepository(transactionRepository: TransactionRepository) {
+        this.transactionRepository = transactionRepository
+    }
+
+    //    TODO REMOVE THIS METHOD
     fun setdatadummy() {
         val dummyList = ArrayList<Transaction>()
         dummyList.add(
-            Transaction(1,
+            Transaction(
+                UUID.randomUUID().toString(), 1,
                 "title", "category",
                 100.0, "indonesia",
-                Location("100,100"), Date()
+                Date()
             )
         )
         dummyList.add(
-            Transaction(2,
+            Transaction(
+                UUID.randomUUID().toString(), 1,
                 "title2", "category2",
                 101.0, "indonesia",
-                Location("100,100"), Date()
+                Date()
             )
         )
         dummyList.add(
-            Transaction(2,
+            Transaction(
+                UUID.randomUUID().toString(), 1,
                 "title2", "category2",
                 101.0, "indonesiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                Location("100,100"), Date()
+                Date()
             )
         )
         _transactions.value = dummyList
     }
 
-    val texts: LiveData<List<Transaction>> = _transactions
+    suspend fun insert(transaction: Transaction) {
+        transactionRepository.insert(transaction)
+        _transactions.value!!.add(0, transaction)
+    }
+
 }

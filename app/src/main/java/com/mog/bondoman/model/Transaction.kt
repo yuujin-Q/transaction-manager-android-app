@@ -1,17 +1,17 @@
 package com.mog.bondoman.model
 
-import android.location.Location
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
+import java.util.UUID
 
 @Entity(tableName = "transactions")
-data class Transaction (
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    val title: String,
-    val category: String,
-    val nominal: Double,
-    val locationName: String,
-    val location: Location,
-    val date: Date
+data class Transaction(
+    @PrimaryKey val id: String = UUID.randomUUID().toString(),
+    var ownerId: Long = -1,
+    var title: String,
+    var category: String,
+    var nominal: Double,
+    var location: String,
+    var date: Date
 )

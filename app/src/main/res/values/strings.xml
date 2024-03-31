@@ -44,4 +44,15 @@
 
     <!--  Transaction string values  -->
     <string name="add_transaction_description">Add a new transaction</string>
+    <string name="transaction_input_title">Title</string>
+    <string name="transaction_input_category">Category</string>
+    <string name="transaction_input_nominal">Nominal</string>
+    <string name="transaction_input_location">Location</string>
+    <string name="add_transaction_button">Add Transaction</string>
+    <string name="update_transaction_button">Update Transaction</string>
+    <string name="delete_transaction_button">Delete Transaction</string>
+
+    <string name="empty_field">Field must not be empty</string>
+    <string name="invalid_positive_number">Number must not be negative</string>
+
 </resources>
