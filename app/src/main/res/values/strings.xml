@@ -44,4 +44,7 @@
 
     <!--  Transaction string values  -->
     <string name="add_transaction_description">Add a new transaction</string>
+    <string name="simpan_daftar_transaksi">Simpan Daftar Transaksi</string>
+    <string name="kirim_daftar_transaksi">Kirim Daftar Transaksi</string>
+    <string name="keluar">Keluar</string>
 </resources>
