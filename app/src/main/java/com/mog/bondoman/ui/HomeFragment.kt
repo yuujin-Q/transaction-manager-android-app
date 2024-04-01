@@ -46,7 +46,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        TODO
         sessionManager = SessionManager.getInstance(
             requireActivity().applicationContext.getSharedPreferences(
                 SessionManager.PREF_KEY,

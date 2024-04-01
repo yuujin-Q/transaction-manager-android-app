@@ -44,6 +44,11 @@
 
     <!--  Transaction string values  -->
     <string name="add_transaction_description">Add a new transaction</string>
+
+    <string name="simpan_daftar_transaksi">Simpan Daftar Transaksi</string>
+    <string name="kirim_daftar_transaksi">Kirim Daftar Transaksi</string>
+    <string name="keluar">Keluar</string>
+
     <string name="transaction_input_title">Title</string>
     <string name="transaction_input_category">Category</string>
     <string name="transaction_input_nominal">Nominal</string>
@@ -54,5 +59,6 @@
 
     <string name="empty_field">Field must not be empty</string>
     <string name="invalid_positive_number">Number must not be negative</string>
+
 
 </resources>

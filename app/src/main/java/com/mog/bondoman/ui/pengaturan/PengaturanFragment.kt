@@ -1,12 +1,14 @@
 package com.mog.bondoman.ui.pengaturan
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.mog.bondoman.R
+import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentPengaturanBinding
 
 class PengaturanFragment : Fragment() {
@@ -16,26 +18,39 @@ class PengaturanFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    private lateinit var sessionManager: SessionManager
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val pengaturanViewModel =
-            ViewModelProvider(this)[PengaturanViewModel::class.java]
-
         _binding = FragmentPengaturanBinding.inflate(inflater, container, false)
-        val root: View = binding.root
 
-        val textView: TextView = binding.textPengaturan
-        pengaturanViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        sessionManager = SessionManager.getInstance(
+            requireActivity().applicationContext.getSharedPreferences(
+                SessionManager.PREF_KEY,
+                Context.MODE_PRIVATE
+            )
+        )
+
+        binding.logout.setOnClickListener {
+            onNegativeClick()
         }
-        return root
+
+        return binding.root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun onNegativeClick() {
+        sessionManager.removeAuthToken()
+
+        // app bar causes two layer of parents between this fragment and HomeFragment
+        requireParentFragment().requireParentFragment().findNavController()
+            .navigate(R.id.navigate_to_login)
     }
 }
