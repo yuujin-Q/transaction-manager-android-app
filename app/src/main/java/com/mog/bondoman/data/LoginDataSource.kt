@@ -1,8 +1,10 @@
 package com.mog.bondoman.data
 
+import android.util.Log
 import com.mog.bondoman.data.connection.ApiClient
 import com.mog.bondoman.data.model.LoggedInUser
 import com.mog.bondoman.data.payload.LoginPayload
+import com.mog.bondoman.data.payload.TokenResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.IOException
@@ -22,7 +24,16 @@ class LoginDataSource(private val apiClient: ApiClient) {
 
                 val token = response.token
 
-                val loggedInUser = LoggedInUser(email, token)
+                Log.d("Datasource", "Before checkToken")
+                val tokenCheck = withContext(Dispatchers.IO) {
+                    apiClient.getApiService()
+                        .checkToken(token = "Bearer $token")
+                }
+                Log.d("Datasource", "After checkToken")
+                Log.d("Datasource", tokenCheck.nim)
+
+
+                val loggedInUser = LoggedInUser(tokenCheck.nim, token)
                 Result.Success(loggedInUser)
             } catch (e: Throwable) {
                 Result.Error(IOException("Error logging in", e))
@@ -30,7 +41,18 @@ class LoginDataSource(private val apiClient: ApiClient) {
         }
     }
 
-    fun logout() {
-        // TODO: revoke authentication
+    suspend fun tokenCheck(token: String): Result<TokenResponse> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    apiClient.getApiService()
+                        .checkToken(token)
+                }
+
+                Result.Success(response)
+            } catch (e: Throwable) {
+                Result.Error(IOException("Failed token check", e))
+            }
+        }
     }
 }

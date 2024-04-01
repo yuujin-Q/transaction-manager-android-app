@@ -1,14 +1,17 @@
 package com.mog.bondoman.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.mog.bondoman.R
+import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentHomeBinding
 
 
@@ -21,6 +24,9 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    //    TODO
+    private lateinit var sessionManager: SessionManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,6 +39,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+//        TODO
+        sessionManager = SessionManager.getInstance(
+            requireActivity().applicationContext.getSharedPreferences(
+                SessionManager.PREF_KEY,
+                AppCompatActivity.MODE_PRIVATE
+            )
+        )
+        Log.d("Home Frag", sessionManager.fetchAuthToken() ?: "no token")
 
         val navHostFrag =
             binding.appBarMain.contentMain.navHostFragmentContentMain.getFragment<NavHostFragment>()

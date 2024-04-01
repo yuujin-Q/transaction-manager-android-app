@@ -8,10 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.mog.bondoman.R
 import com.mog.bondoman.data.LoginRepository
 import com.mog.bondoman.data.Result
+import com.mog.bondoman.data.model.LoggedInUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -19,16 +20,26 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
+    private val _credentials = MutableLiveData<LoggedInUser>()
+    val credentials: LiveData<LoggedInUser> = _credentials
+
     fun login(username: String, password: String) {
         // can be launched in a separate asynchronous job
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = loginRepository.login(username, password)) {
                 is Result.Success -> {
-                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = result.data.displayName)))
+                    _loginResult.postValue(LoginResult(success = LoggedInUserView(displayName = result.data.nim)))
+                    _credentials.postValue(
+                        LoggedInUser(
+                            nim = result.data.nim,
+                            token = result.data.token
+                        )
+                    )
                 }
 
                 else -> {
                     _loginResult.postValue(LoginResult(error = R.string.login_failed))
+                    _credentials.postValue(LoggedInUser(nim = "", token = ""))
                 }
             }
         }
