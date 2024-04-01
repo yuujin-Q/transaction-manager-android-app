@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import com.mog.bondoman.R
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentPengaturanBinding
-import com.mog.bondoman.ui.login.LoginFragment
 
 class PengaturanFragment : Fragment() {
     private var _binding: FragmentPengaturanBinding? = null
@@ -50,8 +49,8 @@ class PengaturanFragment : Fragment() {
     private fun onNegativeClick() {
         sessionManager.removeAuthToken()
 
-        findNavController().popBackStack(0, false)
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_fragment_container, LoginFragment()).commit()
+        // app bar causes two layer of parents between this fragment and HomeFragment
+        requireParentFragment().requireParentFragment().findNavController()
+            .navigate(R.id.navigate_to_login)
     }
 }
