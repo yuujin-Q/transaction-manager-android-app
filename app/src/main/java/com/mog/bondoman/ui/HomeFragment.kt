@@ -7,12 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.mog.bondoman.R
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentHomeBinding
+import com.mog.bondoman.ui.transaction.TransactionViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 /**
@@ -27,10 +32,11 @@ class HomeFragment : Fragment() {
 
     //    TODO
     private lateinit var sessionManager: SessionManager
+    private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
 
@@ -55,7 +61,7 @@ class HomeFragment : Fragment() {
 
         binding.appBarMain.toolbar.inflateMenu(R.menu.overflow)
 
-        binding.navView?.let {
+        binding.navView.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.nav_transaction, R.id.nav_scan, R.id.nav_graf, R.id.nav_settings
@@ -75,6 +81,16 @@ class HomeFragment : Fragment() {
             )
             binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)
             it.setupWithNavController(navControl)
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        val userId = sessionManager.fetchNim()
+        transactionViewModel.setUserId(userId!!.toLong())
+        CoroutineScope(Dispatchers.IO).launch {
+            transactionViewModel.fetchData()
         }
     }
 

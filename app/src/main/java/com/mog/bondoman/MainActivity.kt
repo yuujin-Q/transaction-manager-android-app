@@ -40,20 +40,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         startService(jwtServiceIntent)
-    }
 
-    override fun onStart() {
-        super.onStart()
+        // initialize transaction repository
         transactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
         val transactionDB = TransactionDatabase.getInstance(baseContext)
         val transactionRepository = TransactionRepository(transactionDB)
         transactionViewModel.setRepository(transactionRepository)
-//        TODO("REMOVE SETDATADUMMY")
-        transactionViewModel.setdatadummy()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         stopService(jwtServiceIntent)
+        TransactionDatabase.closeDb()
     }
 }

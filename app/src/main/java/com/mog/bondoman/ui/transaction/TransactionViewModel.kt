@@ -1,16 +1,20 @@
 package com.mog.bondoman.ui.transaction
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mog.bondoman.model.Transaction
 import com.mog.bondoman.repository.TransactionRepository
-import java.util.Date
-import java.util.UUID
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class TransactionViewModel() : ViewModel() {
+class TransactionViewModel: ViewModel() {
 
     private lateinit var transactionRepository: TransactionRepository
+    private var userId: Long? = null
 
     private val _transactions = MutableLiveData<MutableList<Transaction>>()
     val transactions: LiveData<MutableList<Transaction>> = _transactions
@@ -21,41 +25,22 @@ class TransactionViewModel() : ViewModel() {
         this.transactionRepository = transactionRepository
     }
 
-    suspend fun fetchData(ownerId: Long, sortBy: String = "date") {
-        transactionRepository.getAll(ownerId, sortBy)
+    fun setUserId(userId: Long) {
+        this.userId = userId
     }
 
-    //    TODO REMOVE THIS METHOD
-    fun setdatadummy() {
-        val dummyList = ArrayList<Transaction>()
-        dummyList.add(
-            Transaction(
-                UUID.randomUUID().toString(), 1,
-                "title", "category",
-                100.0, "indonesia",
-                Date()
-            )
-        )
-        dummyList.add(
-            Transaction(
-                UUID.randomUUID().toString(), 1,
-                "title2", "category2",
-                101.0, "indonesia",
-                Date()
-            )
-        )
-        dummyList.add(
-            Transaction(
-                UUID.randomUUID().toString(), 1,
-                "title2", "category2",
-                101.0, "indonesiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-                Date()
-            )
-        )
-        _transactions.value = dummyList
+    suspend fun fetchData(sortBy: String = "date") {
+        CoroutineScope(Dispatchers.IO).launch {
+            val transactions = transactionRepository.getAll(userId!!, sortBy)
+            withContext(Dispatchers.Main) {
+                _transactions.value = transactions
+            }
+        }
     }
 
     suspend fun insert(transaction: Transaction) {
+        Log.d("TransactionViewModel", "Current user id = $userId")
+        transaction.ownerId = userId!!
         transactionRepository.insert(transaction)
         _transactions.value!!.add(0, transaction)
     }

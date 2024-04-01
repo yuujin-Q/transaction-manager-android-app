@@ -1,6 +1,5 @@
 package com.mog.bondoman.ui.transaction
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ class TransactionListAdapter(private val transactionRecyclerViewOnClickListener:
             binding.transaction = transaction
             // bind click to edit transaction
             binding.transactionItemContainer.setOnClickListener() {
-                Log.d("TX VIEWHOLDER", "layoutPosition = $layoutPosition")
                 transactionRecyclerViewOnClickListener.editTransaction(layoutPosition)
             }
 
