@@ -69,15 +69,13 @@ class TransactionInputViewModel : ViewModel() {
         }
 
         fun parseTransaction(
-            transactionInputBinding: TransactionInputBinding,
-            userId: Long
+            transactionInputBinding: TransactionInputBinding
         ): Transaction {
             val title = transactionInputBinding.titleEditText.text.toString()
             val category = transactionInputBinding.categoryEditText.text.toString()
             val nominal = transactionInputBinding.nominalEditText.text.toString().toDouble()
             val location = transactionInputBinding.locationEditText.text.toString()
             return Transaction(
-                ownerId = userId,
                 title = title,
                 category = category,
                 nominal = nominal,

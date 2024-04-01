@@ -76,10 +76,8 @@ class AddTransactionFragment : Fragment() {
         transactionInputBinding.addTextChangedListener(afterTextChangedListener)
 
         addTransactionButton.setOnClickListener {
-//                TODO GET USER ID FROM DATASTORE
-            val userId: Long = 69
             val newTransaction =
-                TransactionInputViewModel.parseTransaction(transactionInputBinding, userId)
+                TransactionInputViewModel.parseTransaction(transactionInputBinding)
             CoroutineScope(Dispatchers.IO).launch {
                 transactionViewModel.insert(newTransaction)
             }

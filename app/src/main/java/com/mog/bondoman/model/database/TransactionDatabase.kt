@@ -33,13 +33,21 @@ abstract class TransactionDatabase : RoomDatabase() {
                     .also { INSTANCE = it }
             }
         }
+
+        fun closeDb() {
+            if(INSTANCE == null) return
+            INSTANCE!!.close()
+        }
     }
 }
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM transactions WHERE ownerId = :ownerId ORDER BY :sortBy ASC")
-    fun getAll(ownerId: Long, sortBy: String = "date"): MutableList<Transaction>
+    @Query("SELECT * FROM transactions WHERE ownerId = :ownerId " +
+            "ORDER BY " +
+            "   CASE :orderBy WHEN 'date' THEN date END DESC," +
+            "   CASE :orderBy WHEN 'nominal' THEN nominal END DESC")
+    fun getAll(ownerId: Long, orderBy: String = "date"): MutableList<Transaction>
 
     @Insert
     fun insert(vararg transaction: Transaction)
