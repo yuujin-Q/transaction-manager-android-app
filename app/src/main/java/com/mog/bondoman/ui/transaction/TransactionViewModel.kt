@@ -9,9 +9,8 @@ import com.mog.bondoman.repository.TransactionRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class TransactionViewModel: ViewModel() {
+class TransactionViewModel : ViewModel() {
 
     private lateinit var transactionRepository: TransactionRepository
     private var userId: Long? = null
@@ -31,10 +30,9 @@ class TransactionViewModel: ViewModel() {
 
     suspend fun fetchData(sortBy: String = "date") {
         CoroutineScope(Dispatchers.IO).launch {
-            val transactions = transactionRepository.getAll(userId!!, sortBy)
-            withContext(Dispatchers.Main) {
-                _transactions.value = transactions
-            }
+            _transactions.postValue(
+                transactionRepository.getAll(userId!!, sortBy)
+            )
         }
     }
 

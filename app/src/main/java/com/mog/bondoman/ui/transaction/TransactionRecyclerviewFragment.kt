@@ -1,5 +1,7 @@
 package com.mog.bondoman.ui.transaction
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,7 +59,10 @@ class TransactionRecyclerviewFragment : Fragment(), TransactionRecyclerViewOnCli
     }
 
     override fun openMap(location: String) {
-        TODO("Not yet implemented")
+        val gmmIntentUri = Uri.parse("geo:0,0?q=$location")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
     }
 }
 
