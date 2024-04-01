@@ -58,6 +58,16 @@ class TransactionInputViewModel : ViewModel() {
             }
         }
 
+        fun applyDataToView(
+            transactionInputBinding: TransactionInputBinding,
+            transaction: Transaction
+        ) {
+            transactionInputBinding.titleEditText.setText(transaction.title)
+            transactionInputBinding.categoryEditText.setText(transaction.category)
+            transactionInputBinding.nominalEditText.setText(transaction.nominal.toString())
+            transactionInputBinding.locationEditText.setText(transaction.location)
+        }
+
         fun parseTransaction(
             transactionInputBinding: TransactionInputBinding,
             userId: Long

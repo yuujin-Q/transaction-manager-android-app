@@ -14,4 +14,21 @@ data class Transaction(
     var nominal: Double,
     var location: String,
     var date: Date
-)
+) {
+    constructor(
+        ownerId: Long,
+        title: String,
+        category: String,
+        nominal: Double,
+        location: String,
+        date: Date
+    ) : this(
+        id = UUID.randomUUID().toString(),
+        ownerId = ownerId,
+        title = title,
+        category = category,
+        nominal = nominal,
+        location = location,
+        date = date
+    )
+}

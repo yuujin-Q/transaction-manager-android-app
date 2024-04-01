@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.mog.bondoman.R
 import com.mog.bondoman.databinding.FragmentTransactionRecyclerviewBinding
 
-class TransactionRecyclerviewFragment : Fragment() {
+class TransactionRecyclerviewFragment : Fragment(), TransactionRecyclerViewOnClickListener {
     private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
     private var _binding: FragmentTransactionRecyclerviewBinding? = null
 
@@ -30,8 +30,9 @@ class TransactionRecyclerviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        transactionViewModel.clearOngoingUpdate()
         val recyclerView = binding.transactionRecyclerview
-        val adapter = TransactionListAdapter()
+        val adapter = TransactionListAdapter(this)
 
         recyclerView.adapter = adapter
         transactionViewModel.transactions.observe(viewLifecycleOwner) {
@@ -47,4 +48,20 @@ class TransactionRecyclerviewFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun editTransaction(position: Int) {
+        val action =
+            TransactionRecyclerviewFragmentDirections
+                .actionTransactionRecyclerviewFragmentToEditTransactionFragment(position)
+        findNavController().navigate(action)
+    }
+
+    override fun openMap(location: String) {
+        TODO("Not yet implemented")
+    }
+}
+
+interface TransactionRecyclerViewOnClickListener {
+    fun editTransaction(position: Int)
+    fun openMap(location: String)
 }

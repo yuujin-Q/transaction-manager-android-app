@@ -15,8 +15,14 @@ class TransactionViewModel() : ViewModel() {
     private val _transactions = MutableLiveData<MutableList<Transaction>>()
     val transactions: LiveData<MutableList<Transaction>> = _transactions
 
+    private var ongoingUpdate: Int? = null
+
     fun setRepository(transactionRepository: TransactionRepository) {
         this.transactionRepository = transactionRepository
+    }
+
+    suspend fun fetchData(ownerId: Long, sortBy: String = "date") {
+        transactionRepository.getAll(ownerId, sortBy)
     }
 
     //    TODO REMOVE THIS METHOD
@@ -54,4 +60,20 @@ class TransactionViewModel() : ViewModel() {
         _transactions.value!!.add(0, transaction)
     }
 
+    suspend fun update() {
+        transactionRepository.update(_transactions.value!![ongoingUpdate!!])
+    }
+
+    suspend fun delete() {
+        transactionRepository.delete(_transactions.value!![ongoingUpdate!!])
+        _transactions.value!!.removeAt(ongoingUpdate!!)
+    }
+
+    fun clearOngoingUpdate() {
+        ongoingUpdate = null
+    }
+
+    fun setOngoingUpdate(itemPosition: Int) {
+        ongoingUpdate = itemPosition
+    }
 }

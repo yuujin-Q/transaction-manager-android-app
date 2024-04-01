@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:clickable="true">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -12,12 +11,14 @@
     </data>
 
     <RelativeLayout
+        android:id="@+id/transaction_item_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/transaction_item_shape"
         android:layout_margin="8dp"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:clickable="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -70,11 +71,12 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/transaction_item_location_name"
-                app:srcCompat="@android:drawable/ic_menu_mylocation" />
+                app:layout_constraintEnd_toStartOf="@+id/transaction_item_location"
+                app:srcCompat="@android:drawable/ic_menu_mylocation"
+                android:contentDescription="@string/transaction_input_location" />
 
             <TextView
-                android:id="@+id/transaction_item_location_name"
+                android:id="@+id/transaction_item_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
