@@ -1,19 +1,37 @@
 package com.mog.bondoman.ui.transaction
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mog.bondoman.databinding.TransactionItemBinding
 import com.mog.bondoman.model.Transaction
 
-class TransactionListAdapter() :
+class TransactionListAdapter(private val transactionRecyclerViewOnClickListener: TransactionRecyclerViewOnClickListener) :
     ListAdapter<Transaction,
             TransactionListAdapter.TransactionViewHolder>(RowItemDiffCallback()) {
-    class TransactionViewHolder(private val binding: TransactionItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(transaction: Transaction) {
+    class TransactionViewHolder(private val binding: TransactionItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(
+            transaction: Transaction,
+            transactionRecyclerViewOnClickListener: TransactionRecyclerViewOnClickListener
+        ) {
             binding.transaction = transaction
+            // bind click to edit transaction
+            binding.transactionItemContainer.setOnClickListener() {
+                Log.d("TX VIEWHOLDER", "layoutPosition = $layoutPosition")
+                transactionRecyclerViewOnClickListener.editTransaction(layoutPosition)
+            }
+
+            // bind click location symbol & location name to maps intent
+            val locationClickListener = View.OnClickListener {
+                transactionRecyclerViewOnClickListener.openMap(binding.transactionItemLocation.text.toString())
+            }
+            binding.locationSymbol.setOnClickListener(locationClickListener)
+            binding.transactionItemLocation.setOnClickListener(locationClickListener)
         }
     }
 
@@ -23,7 +41,7 @@ class TransactionListAdapter() :
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), transactionRecyclerViewOnClickListener)
     }
 }
 
@@ -31,6 +49,7 @@ private class RowItemDiffCallback : DiffUtil.ItemCallback<Transaction>() {
     override fun areItemsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
         return oldItem == newItem
     }
+
     override fun areContentsTheSame(oldItem: Transaction, newItem: Transaction): Boolean {
         return oldItem == newItem
     }

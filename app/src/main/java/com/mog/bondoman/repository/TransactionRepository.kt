@@ -3,32 +3,26 @@ package com.mog.bondoman.repository
 import com.mog.bondoman.model.Transaction
 import com.mog.bondoman.model.database.TransactionDatabase
 
-interface TransactionRepository {
-    fun getTransactions(sortBy: String): MutableList<Transaction>
+class TransactionRepository(
+    private val transactionDB: TransactionDatabase
+) {
 
-    fun updateTransaction(transaction: Transaction)
-
-    fun insertTransaction(transaction: Transaction)
-
-    fun deleteTransaction(transaction: Transaction)
-}
-
-class TransactionRepositoryImpl(
-    private val transactionDB: TransactionDatabase) : TransactionRepository {
-
-    override fun getTransactions(sortBy: String): MutableList<Transaction> {
-        return transactionDB.transactionDao().getAll(sortBy)
+    suspend fun getAll(userId: Long, sortBy: String = "date"): MutableList<Transaction> {
+        return transactionDB.transactionDao().getAll(userId, sortBy)
     }
 
-    override fun updateTransaction(transaction: Transaction) {
+    suspend fun update(transaction: Transaction) {
+//        TODO UPDATE DATA
+//        TODO UPDATE LOCATION NAME
         transactionDB.transactionDao().update(transaction)
     }
 
-    override fun insertTransaction(transaction: Transaction) {
+    suspend fun insert(transaction: Transaction, userId: Long? = null) {
+        if (userId != null) transaction.ownerId = userId
         transactionDB.transactionDao().insert(transaction)
     }
 
-    override fun deleteTransaction(transaction: Transaction) {
+    suspend fun delete(transaction: Transaction) {
         transactionDB.transactionDao().delete(transaction)
     }
 }

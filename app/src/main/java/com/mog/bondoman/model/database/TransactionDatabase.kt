@@ -18,6 +18,7 @@ import com.mog.bondoman.model.converters.LocationConverter
 @Database(entities = [Transaction::class], version = 1)
 abstract class TransactionDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
+
     companion object {
         @Volatile
         private var INSTANCE: TransactionDatabase? = null
@@ -25,7 +26,7 @@ abstract class TransactionDatabase : RoomDatabase() {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
                     context.applicationContext,
-                    TransactionDatabase::class.java, ""
+                    TransactionDatabase::class.java, "bondoman_transaction"
                 )
                     .fallbackToDestructiveMigration()
                     .build()
@@ -37,8 +38,8 @@ abstract class TransactionDatabase : RoomDatabase() {
 
 @Dao
 interface TransactionDao {
-    @Query("SELECT * FROM transactions ORDER BY :sortBy DESC")
-    fun getAll(sortBy: String = "date"): MutableList<Transaction>
+    @Query("SELECT * FROM transactions WHERE ownerId = :ownerId ORDER BY :sortBy ASC")
+    fun getAll(ownerId: Long, sortBy: String = "date"): MutableList<Transaction>
 
     @Insert
     fun insert(vararg transaction: Transaction)
