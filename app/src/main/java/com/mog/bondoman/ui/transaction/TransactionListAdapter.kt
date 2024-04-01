@@ -24,12 +24,18 @@ class TransactionListAdapter(private val transactionRecyclerViewOnClickListener:
                 transactionRecyclerViewOnClickListener.editTransaction(layoutPosition)
             }
 
-            // bind click location symbol & location name to maps intent
-            val locationClickListener = View.OnClickListener {
-                transactionRecyclerViewOnClickListener.openMap(binding.transactionItemLocation.text.toString())
+            // if item has no location listed, disable button
+            if (transaction.location.isBlank()) {
+                binding.locationSymbol.visibility = View.GONE
+                binding.transactionItemLocation.visibility = View.GONE
+            } else {
+                // bind click location symbol & location name to maps intent
+                val locationClickListener = View.OnClickListener {
+                    transactionRecyclerViewOnClickListener.openMap(binding.transactionItemLocation.text.toString())
+                }
+                binding.locationSymbol.setOnClickListener(locationClickListener)
+                binding.transactionItemLocation.setOnClickListener(locationClickListener)
             }
-            binding.locationSymbol.setOnClickListener(locationClickListener)
-            binding.transactionItemLocation.setOnClickListener(locationClickListener)
         }
     }
 

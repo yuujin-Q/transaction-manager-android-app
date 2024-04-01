@@ -32,6 +32,8 @@ class EditTransactionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEditTransactionBinding.inflate(inflater, container, false)
+        // TURNS OUT CATEGORY IS NOT TO BE CHANGED
+        binding.transactionInputField.editTransactionCategory.visibility = View.GONE
         return binding.root
     }
 

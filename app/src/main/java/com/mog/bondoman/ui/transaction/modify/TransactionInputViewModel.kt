@@ -17,7 +17,7 @@ class TransactionInputViewModel : ViewModel() {
         val title = transactionInputBinding.titleEditText.text.toString()
         val category = transactionInputBinding.categoryEditText.text.toString()
         val nominal = transactionInputBinding.nominalEditText.text.toString()
-        val location = transactionInputBinding.locationEditText.text.toString()
+//        val location = transactionInputBinding.locationEditText.text.toString()
         if (title.isBlank()) {
             _transactionFormState.value = TransactionFormState(titleError = R.string.empty_field)
         } else if (category.isBlank()) {
@@ -25,8 +25,8 @@ class TransactionInputViewModel : ViewModel() {
         } else if (checkPositiveNominal(nominal)) {
             _transactionFormState.value =
                 TransactionFormState(nominalError = R.string.invalid_positive_number)
-        } else if (location.isBlank()) {
-            _transactionFormState.value = TransactionFormState(locationError = R.string.empty_field)
+//        } else if (location.isBlank()) {
+//            _transactionFormState.value = TransactionFormState(locationError = R.string.empty_field)
         } else {
             _transactionFormState.value = TransactionFormState(isDataValid = true)
         }
