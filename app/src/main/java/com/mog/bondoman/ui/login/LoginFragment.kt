@@ -1,8 +1,5 @@
 package com.mog.bondoman.ui.login
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -21,20 +18,27 @@ import com.mog.bondoman.R
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentLoginBinding
 
+
 class LoginFragment : Fragment() {
     private lateinit var sessionManager: SessionManager
     private lateinit var loginViewModel: LoginViewModel
     private var _binding: FragmentLoginBinding? = null
-    private val broadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == "TOKEN_CHECK") {
-                val isValid = intent.getBooleanExtra("TOKEN_CHECK_IS_VALID", false)
-                if (isValid) {
-                    findNavController().navigate(R.id.navigate_to_home)
-                }
-            }
-        }
-    }
+//    private val broadcastReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            Log.d("Broadcast receiver", "receive")
+//            if (intent?.action == "TOKEN_CHECK") {
+//                val isValid = intent.getBooleanExtra("TOKEN_CHECK_IS_VALID", false)
+//                val checkToken = intent.getStringExtra("TOKEN_CHECK_TOKEN")
+//                val checkNim = intent.getStringExtra("TOKEN_CHECK_NIM")
+//
+//                Log.d("Broadcast receiver", "token ${checkToken ?: "no token"}")
+//                Log.d("Broadcast receiver", "nim ${checkNim ?: "no nim"}")
+////                if (isValid) {
+////                    findNavController().navigate(R.id.navigate_to_home)
+////                }
+//            }
+//        }
+//    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -57,7 +61,7 @@ class LoginFragment : Fragment() {
                 SessionManager.PREF_KEY,
                 AppCompatActivity.MODE_PRIVATE
             )
-        )!!
+        )
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext()))
             .get(LoginViewModel::class.java)
@@ -136,7 +140,25 @@ class LoginFragment : Fragment() {
                 passwordEditText.text.toString()
             )
         }
+
+        val token = sessionManager.fetchAuthToken()
+        if (token != null) {
+//            TODO validate JWT from service?
+            val nim = sessionManager.fetchNim()!!
+            updateUiWithUser(LoggedInUserView(nim))
+        }
     }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        requireActivity().registerReceiver(
+//            this.broadcastReceiver,
+//            IntentFilter("TOKEN_CHECK"),
+//            null,
+//            null,
+//            Context.RECEIVER_NOT_EXPORTED
+//        )
+//    }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome) + model.displayName

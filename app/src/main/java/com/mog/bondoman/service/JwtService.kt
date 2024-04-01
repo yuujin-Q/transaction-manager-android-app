@@ -45,6 +45,8 @@ class JwtService : Service() {
                     putExtra("TOKEN_CHECK_NIM", tokenValidation?.nim)
                 }
 
+//                TODO: fix jwt service
+                Log.d("JWT", "Send broadcast")
                 sendBroadcast(broadcaster)
 
 //                if (tokenValidation == null) {
