@@ -7,34 +7,34 @@ import android.util.Log
 import com.mog.bondoman.data.connection.ApiClient
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.data.model.LoggedInUser
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class JwtService : Service() {
     private val interval: Long = 60 * 1000      // per minute
     private val apiClient = ApiClient()
-    private lateinit var sessionManager: SessionManager
+
+    @Inject
+    lateinit var sessionManager: SessionManager
     private val serviceJob = Job()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
 
-
     override fun onCreate() {
         super.onCreate()
-        sessionManager = SessionManager.getInstance(
-            applicationContext.getSharedPreferences(
-                SessionManager.PREF_KEY,
-                MODE_PRIVATE
-            )
-        )
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         serviceScope.launch {
             while (true) {
                 val tokenValidation = validateToken()
+                Log.d("JWT", "Process ${android.os.Process.myPid()}")
                 Log.d("JWT", tokenValidation?.nim ?: "no nim")
                 Log.d("JWT", tokenValidation?.token ?: "no token")
 
