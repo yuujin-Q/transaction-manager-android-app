@@ -7,7 +7,7 @@ class TransactionRepository(
     private val transactionDB: TransactionDatabase
 ) {
 
-    suspend fun getAll(userId: Long, sortBy: String): MutableList<Transaction> {
+    suspend fun getAll(userId: Long, sortBy: String = "date"): MutableList<Transaction> {
         return transactionDB.transactionDao().getAll(userId, sortBy)
     }
 

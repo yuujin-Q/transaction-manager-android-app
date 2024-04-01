@@ -12,10 +12,12 @@
         tools:layout="@layout/fragment_transaction_recyclerview">
         <action
             android:id="@+id/action_transactionRecyclerviewFragment_to_addTransactionFragment"
-            app:destination="@id/nav_add_transaction" />
+            app:destination="@id/nav_add_transaction"
+            app:restoreState="true" />
         <action
             android:id="@+id/action_transactionRecyclerviewFragment_to_editTransactionFragment"
-            app:destination="@id/nav_edit_transaction" />
+            app:destination="@id/nav_edit_transaction"
+            app:restoreState="true" />
     </fragment>
 
     <fragment
@@ -33,6 +35,9 @@
         android:name="com.mog.bondoman.ui.transaction.modify.EditTransactionFragment"
         android:label="EditTransactionFragment"
         tools:layout="@layout/fragment_edit_transaction">
+        <argument
+            android:name="item_position"
+            app:argType="integer" />
         <action
             android:id="@+id/action_editTransactionFragment_to_transactionRecyclerviewFragment"
             app:destination="@id/nav_transaction_recyclerview" />
