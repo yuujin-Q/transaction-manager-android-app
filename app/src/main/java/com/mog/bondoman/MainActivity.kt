@@ -4,10 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.mog.bondoman.data.connection.SessionManager
+import androidx.lifecycle.ViewModelProvider
 import com.mog.bondoman.databinding.ActivityMainBinding
 import com.mog.bondoman.service.JwtService
+import com.mog.bondoman.model.database.TransactionDatabase
+import com.mog.bondoman.repository.TransactionRepository
+import com.mog.bondoman.ui.transaction.TransactionViewModel
 
 class MainActivity : AppCompatActivity() {
+
+    //    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var transactionViewModel: TransactionViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var jwtServiceIntent: Intent
     private lateinit var sessionManager: SessionManager
@@ -33,6 +40,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         startService(jwtServiceIntent)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        transactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
+        val transactionDB = TransactionDatabase.getInstance(baseContext)
+        val transactionRepository = TransactionRepository(transactionDB)
+        transactionViewModel.setRepository(transactionRepository)
+//        TODO("REMOVE SETDATADUMMY")
+        transactionViewModel.setdatadummy()
     }
 
     override fun onDestroy() {

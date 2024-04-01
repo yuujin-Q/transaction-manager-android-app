@@ -28,4 +28,6 @@
         android:name="com.mog.bondoman.ui.pengaturan.PengaturanFragment"
         android:label="@string/menu_pengaturan"
         tools:layout="@layout/fragment_pengaturan" />
+
+    <include app:graph="@navigation/transaction_navigation" />
 </navigation>
