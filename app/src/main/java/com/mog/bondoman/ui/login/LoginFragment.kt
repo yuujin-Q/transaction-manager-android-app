@@ -12,15 +12,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mog.bondoman.R
+import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
-
+    private lateinit var sessionManager: SessionManager
     private lateinit var loginViewModel: LoginViewModel
     private var _binding: FragmentLoginBinding? = null
     private val broadcastReceiver = object : BroadcastReceiver() {
@@ -43,14 +45,20 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        sessionManager = SessionManager.getInstance(
+            requireActivity().applicationContext.getSharedPreferences(
+                SessionManager.PREF_KEY,
+                AppCompatActivity.MODE_PRIVATE
+            )
+        )!!
+
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext()))
             .get(LoginViewModel::class.java)
 
@@ -82,6 +90,14 @@ class LoginFragment : Fragment() {
                 }
                 loginResult.success?.let {
                     updateUiWithUser(it)
+                }
+            })
+
+        loginViewModel.credentials.observe(viewLifecycleOwner,
+            Observer { creds ->
+                creds ?: return@Observer
+                if (creds.nim.isNotEmpty() && creds.token.isNotEmpty()) {
+                    sessionManager.saveAuthToken(creds.nim, creds.token)
                 }
             })
 

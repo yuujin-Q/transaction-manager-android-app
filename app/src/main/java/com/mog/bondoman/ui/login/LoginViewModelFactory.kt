@@ -18,8 +18,7 @@ class LoginViewModelFactory(val context: Context) : ViewModelProvider.Factory {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
             return LoginViewModel(
                 loginRepository = LoginRepository(
-                    dataSource = LoginDataSource(apiClient = ApiClient()),
-                    context
+                    dataSource = LoginDataSource(apiClient = ApiClient())
                 )
             ) as T
         }

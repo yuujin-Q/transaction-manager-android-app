@@ -1,42 +1,29 @@
 package com.mog.bondoman.data.connection
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.util.Log
-import com.mog.bondoman.R
 
 
-class SessionManager {
+class SessionManager private constructor(private val prefs: SharedPreferences) {
     companion object {
         const val USER_TOKEN = "user_token"
         const val NIM = "user_nim"
-        private lateinit var applicationContext: Context
+        const val PREF_KEY = "AUTH_PREF"
 
-        fun initialize(context: Context) {
-            if (!::applicationContext.isInitialized) {
-                applicationContext = context.applicationContext
-            }
-        }
-
-        fun getInstance(): SessionManager {
-            if (!::applicationContext.isInitialized) {
-                throw IllegalStateException("SessionManager must be initialized before use")
-            }
-            return SessionManager()
+        private var instance: SessionManager? = null
+        
+        fun getInstance(prefs: SharedPreferences) = instance ?: synchronized(this) {
+            instance ?: SessionManager(prefs).also { instance = it }
         }
     }
 
-    private var prefs: SharedPreferences =
-        applicationContext.getSharedPreferences(
-            applicationContext.getString(R.string.app_name),
-            Context.MODE_PRIVATE
-        )
-
+    @SuppressLint("ApplySharedPref")
     fun saveAuthToken(nim: String, token: String) {
         val editor = prefs.edit()
         editor.putString(USER_TOKEN, token)
         editor.putString(NIM, nim)
-        editor.apply()
+        editor.commit()
 
         Log.d("SessionMan save", this.fetchNim() ?: "empty nim on session")
         Log.d("SessionMan save", this.fetchAuthToken() ?: "empty token on session")
@@ -50,11 +37,12 @@ class SessionManager {
         return prefs.getString(NIM, null)
     }
 
+    @SuppressLint("ApplySharedPref")
     fun removeAuthToken() {
         val editor = prefs.edit()
         editor.remove(USER_TOKEN)
         editor.remove(NIM)
-        editor.apply()
+        editor.commit()
 
         Log.d("SessionMan remove", this.fetchNim() ?: "empty nim on session")
         Log.d("SessionMan remove", this.fetchAuthToken() ?: "empty token on session")

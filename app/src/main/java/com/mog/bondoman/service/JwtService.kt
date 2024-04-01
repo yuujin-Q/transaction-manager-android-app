@@ -23,7 +23,12 @@ class JwtService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        sessionManager = SessionManager.getInstance()
+        sessionManager = SessionManager.getInstance(
+            applicationContext.getSharedPreferences(
+                SessionManager.PREF_KEY,
+                MODE_PRIVATE
+            )
+        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -42,9 +47,9 @@ class JwtService : Service() {
 
                 sendBroadcast(broadcaster)
 
-                if (tokenValidation == null) {
-                    sessionManager.removeAuthToken()
-                }
+//                if (tokenValidation == null) {
+//                    sessionManager.removeAuthToken()
+//                }
 
                 Thread.sleep(interval)
             }
