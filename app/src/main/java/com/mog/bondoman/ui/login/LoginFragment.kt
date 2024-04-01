@@ -9,17 +9,36 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.mog.bondoman.R
+import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentLoginBinding
 
-class LoginFragment : Fragment() {
 
+class LoginFragment : Fragment() {
+    private lateinit var sessionManager: SessionManager
     private lateinit var loginViewModel: LoginViewModel
     private var _binding: FragmentLoginBinding? = null
+//    private val broadcastReceiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            Log.d("Broadcast receiver", "receive")
+//            if (intent?.action == "TOKEN_CHECK") {
+//                val isValid = intent.getBooleanExtra("TOKEN_CHECK_IS_VALID", false)
+//                val checkToken = intent.getStringExtra("TOKEN_CHECK_TOKEN")
+//                val checkNim = intent.getStringExtra("TOKEN_CHECK_NIM")
+//
+//                Log.d("Broadcast receiver", "token ${checkToken ?: "no token"}")
+//                Log.d("Broadcast receiver", "nim ${checkNim ?: "no nim"}")
+////                if (isValid) {
+////                    findNavController().navigate(R.id.navigate_to_home)
+////                }
+//            }
+//        }
+//    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -30,15 +49,21 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
+
+        sessionManager = SessionManager.getInstance(
+            requireActivity().applicationContext.getSharedPreferences(
+                SessionManager.PREF_KEY,
+                AppCompatActivity.MODE_PRIVATE
+            )
+        )
+
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext()))
             .get(LoginViewModel::class.java)
 
         val usernameEditText = binding.username
@@ -69,6 +94,14 @@ class LoginFragment : Fragment() {
                 }
                 loginResult.success?.let {
                     updateUiWithUser(it)
+                }
+            })
+
+        loginViewModel.credentials.observe(viewLifecycleOwner,
+            Observer { creds ->
+                creds ?: return@Observer
+                if (creds.nim.isNotEmpty() && creds.token.isNotEmpty()) {
+                    sessionManager.saveAuthToken(creds.nim, creds.token)
                 }
             })
 
@@ -107,7 +140,25 @@ class LoginFragment : Fragment() {
                 passwordEditText.text.toString()
             )
         }
+
+        val token = sessionManager.fetchAuthToken()
+        if (token != null) {
+//            TODO validate JWT from service?
+            val nim = sessionManager.fetchNim()!!
+            updateUiWithUser(LoggedInUserView(nim))
+        }
     }
+//
+//    override fun onResume() {
+//        super.onResume()
+//        requireActivity().registerReceiver(
+//            this.broadcastReceiver,
+//            IntentFilter("TOKEN_CHECK"),
+//            null,
+//            null,
+//            Context.RECEIVER_NOT_EXPORTED
+//        )
+//    }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome) + model.displayName
