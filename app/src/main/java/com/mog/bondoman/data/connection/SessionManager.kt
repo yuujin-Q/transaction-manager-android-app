@@ -1,21 +1,38 @@
 package com.mog.bondoman.data.connection
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 
-class SessionManager private constructor(private val prefs: SharedPreferences) {
+@Module
+@InstallIn(SingletonComponent::class)
+object SessionManagerProvider {
+    @Singleton
+    @Provides
+    fun provideSessionManager(@ApplicationContext context: Context): SessionManager {
+        return SessionManager(context)
+    }
+}
+
+class SessionManager(context: Context) {
+    private var prefs: SharedPreferences
+
     companion object {
         const val USER_TOKEN = "user_token"
         const val NIM = "user_nim"
         const val PREF_KEY = "AUTH_PREF"
+    }
 
-        private var instance: SessionManager? = null
-        
-        fun getInstance(prefs: SharedPreferences) = instance ?: synchronized(this) {
-            instance ?: SessionManager(prefs).also { instance = it }
-        }
+    init {
+        prefs = context.getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE)
     }
 
     @SuppressLint("ApplySharedPref")

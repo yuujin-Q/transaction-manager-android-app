@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.NavHostFragment
@@ -15,9 +14,11 @@ import com.mog.bondoman.R
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentHomeBinding
 import com.mog.bondoman.ui.transaction.TransactionViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 /**
@@ -25,13 +26,15 @@ import kotlinx.coroutines.launch
  * Use the [HomeFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     //    TODO
-    private lateinit var sessionManager: SessionManager
+    @Inject
+    lateinit var sessionManager: SessionManager
     private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,12 +49,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sessionManager = SessionManager.getInstance(
-            requireActivity().applicationContext.getSharedPreferences(
-                SessionManager.PREF_KEY,
-                AppCompatActivity.MODE_PRIVATE
-            )
-        )
         Log.d("Home Frag", sessionManager.fetchAuthToken() ?: "no token")
 
         val navHostFrag =
