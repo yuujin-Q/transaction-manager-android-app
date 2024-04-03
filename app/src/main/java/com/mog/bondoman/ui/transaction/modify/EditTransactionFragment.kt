@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.mog.bondoman.data.model.Transaction
 import com.mog.bondoman.databinding.FragmentEditTransactionBinding
-import com.mog.bondoman.model.Transaction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +53,10 @@ class EditTransactionFragment : ModifyTransactionFragment() {
             updateTransactionButton
         )
 
-        setLocationButtonOnClick(binding.transactionInputField.addLocationButton, transactionInputBinding)
+        setLocationButtonOnClick(
+            binding.transactionInputField.addLocationButton,
+            transactionInputBinding
+        )
 
         setButtonClickListeners(transactionInputBinding, ongoingUpdateTransaction)
     }

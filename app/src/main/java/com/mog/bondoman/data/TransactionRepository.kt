@@ -1,7 +1,7 @@
-package com.mog.bondoman.repository
+package com.mog.bondoman.data
 
-import com.mog.bondoman.model.Transaction
-import com.mog.bondoman.model.database.TransactionDatabase
+import com.mog.bondoman.data.model.Transaction
+import com.mog.bondoman.data.model.TransactionDatabase
 
 class TransactionRepository(
     private val transactionDB: TransactionDatabase

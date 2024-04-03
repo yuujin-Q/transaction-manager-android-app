@@ -7,7 +7,7 @@
 
         <variable
             name="transaction"
-            type="com.mog.bondoman.model.Transaction" />
+            type="com.mog.bondoman.data.model.Transaction" />
     </data>
 
     <RelativeLayout

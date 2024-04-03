@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mog.bondoman.R
-import com.mog.bondoman.model.Transaction
+import com.mog.bondoman.data.model.Transaction
 import java.util.Date
 
 class TransactionInputViewModel : ViewModel() {

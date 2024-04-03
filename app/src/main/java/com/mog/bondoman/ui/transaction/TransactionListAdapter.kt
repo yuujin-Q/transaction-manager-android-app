@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mog.bondoman.databinding.TransactionItemBinding
-import com.mog.bondoman.model.Transaction
+import com.mog.bondoman.data.model.Transaction
 
 class TransactionListAdapter(private val transactionRecyclerViewOnClickListener: TransactionRecyclerViewOnClickListener) :
     ListAdapter<Transaction,

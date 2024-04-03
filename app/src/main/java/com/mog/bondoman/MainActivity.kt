@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.ActivityMainBinding
-import com.mog.bondoman.model.database.TransactionDatabase
-import com.mog.bondoman.repository.TransactionRepository
+import com.mog.bondoman.data.model.TransactionDatabase
+import com.mog.bondoman.data.TransactionRepository
 import com.mog.bondoman.service.JwtService
 import com.mog.bondoman.ui.transaction.TransactionViewModel
 import dagger.hilt.android.AndroidEntryPoint
