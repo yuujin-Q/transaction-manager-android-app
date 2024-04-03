@@ -1,8 +1,13 @@
 package com.mog.bondoman
 
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.NetworkCallback
+import android.net.Network
+import android.net.NetworkRequest
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.mog.bondoman.data.connection.SessionManager
@@ -16,11 +21,12 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-
-    //    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var transactionViewModel: TransactionViewModel
     private lateinit var binding: ActivityMainBinding
     private lateinit var jwtServiceIntent: Intent
+    private lateinit var networkCallback: NetworkCallback
+    private lateinit var connectivityManager: ConnectivityManager
+
 
     @Inject
     lateinit var sessionManager: SessionManager
@@ -32,9 +38,10 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        jwtServiceIntent = Intent(this.applicationContext, JwtService::class.java)
         setContentView(binding.root)
 
+        // setup jwt service for checking saved session token
+        jwtServiceIntent = Intent(this.applicationContext, JwtService::class.java)
         startService(jwtServiceIntent)
 
         // initialize transaction repository
@@ -42,11 +49,27 @@ class MainActivity : AppCompatActivity() {
         val transactionDB = TransactionDatabase.getInstance(baseContext)
         val transactionRepository = TransactionRepository(transactionDB)
         transactionViewModel.setRepository(transactionRepository)
+
+        // connectivity manager for checking network
+        connectivityManager = getSystemService(ConnectivityManager::class.java)
+        networkCallback = object : NetworkCallback() {
+            override fun onLost(network: Network) {
+                sessionManager.removeAuthToken()
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.disconnected_network),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+        val networkRequest = NetworkRequest.Builder().build()
+        connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         stopService(jwtServiceIntent)
         TransactionDatabase.closeDb()
+        connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }
