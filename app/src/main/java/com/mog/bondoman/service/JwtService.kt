@@ -34,6 +34,7 @@ class JwtService : Service() {
                     Log.d("JWT Validate", "Invalid JWT")
                     sessionManager.removeAuthToken()
                 }
+                Log.d("JWT Validate", "Valid JWT, Continue")
                 delay(interval)
             }
 
@@ -55,7 +56,7 @@ class JwtService : Service() {
             } else {
                 try {
                     val response =
-                        apiClient.getApiService().checkToken(token)
+                        apiClient.getApiService().checkToken("Bearer $token")
 
                     LoggedInUser(response.nim, token)
                 } catch (e: Throwable) {
