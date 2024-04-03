@@ -10,7 +10,7 @@ import com.mog.bondoman.data.model.LoggedInUser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -22,40 +22,33 @@ class JwtService : Service() {
 
     @Inject
     lateinit var sessionManager: SessionManager
-    private val serviceJob = Job()
-    private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
-
-    override fun onCreate() {
-        super.onCreate()
-
-    }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        serviceScope.launch {
+
+
+        CoroutineScope(Dispatchers.IO).launch {
             while (true) {
+                Log.d("JWT Cached", sessionManager.fetchNim() ?: "no nim")
+                Log.d("JWT Cached", sessionManager.fetchAuthToken() ?: "no token")
                 val tokenValidation = validateToken()
-                Log.d("JWT", "Process ${android.os.Process.myPid()}")
-                Log.d("JWT", tokenValidation?.nim ?: "no nim")
-                Log.d("JWT", tokenValidation?.token ?: "no token")
 
-                val broadcaster = Intent().apply {
-                    action = "TOKEN_CHECK"
-                    putExtra("TOKEN_CHECK_IS_VALID", tokenValidation != null)
-                    putExtra("TOKEN_CHECK_TOKEN", tokenValidation?.token)
-                    putExtra("TOKEN_CHECK_NIM", tokenValidation?.nim)
+                if (tokenValidation == null) {
+                    Log.d("JWT Validate", "Invalid JWT")
+
+                    val broadcaster = Intent().apply {
+                        action = "com.mog.bondoman.jwtservice"
+                        putExtra("VALID_TOKEN", false)
+                    }
+                    Log.d("JWT", "Send broadcast")
+
+                    sendBroadcast(broadcaster)
+                    break
                 }
-
-//                TODO: fix jwt service
-                Log.d("JWT", "Send broadcast")
-                sendBroadcast(broadcaster)
-
-//                if (tokenValidation == null) {
-//                    sessionManager.removeAuthToken()
-//                }
-
-                Thread.sleep(interval)
+                delay(interval)
             }
+
         }
+
         return START_STICKY
     }
 
@@ -83,6 +76,5 @@ class JwtService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        serviceJob.cancel()
     }
 }
