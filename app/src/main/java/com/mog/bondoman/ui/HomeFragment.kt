@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.mog.bondoman.R
@@ -28,11 +30,9 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-
     private lateinit var binding: FragmentHomeBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    //    TODO
     @Inject
     lateinit var sessionManager: SessionManager
     private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
@@ -78,6 +78,15 @@ class HomeFragment : Fragment() {
             binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)
             it.setupWithNavController(navControl)
         }
+
+        sessionManager.isValidSession.observe(viewLifecycleOwner,
+            Observer { isValid ->
+                if (isValid) {
+                    return@Observer
+                } else {
+                    findNavController().navigate(R.id.navigate_to_login)
+                }
+            })
     }
 
     override fun onStart() {

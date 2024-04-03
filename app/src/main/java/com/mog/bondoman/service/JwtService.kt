@@ -24,8 +24,6 @@ class JwtService : Service() {
     lateinit var sessionManager: SessionManager
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-
         CoroutineScope(Dispatchers.IO).launch {
             while (true) {
                 Log.d("JWT Cached", sessionManager.fetchNim() ?: "no nim")
@@ -34,15 +32,7 @@ class JwtService : Service() {
 
                 if (tokenValidation == null) {
                     Log.d("JWT Validate", "Invalid JWT")
-
-                    val broadcaster = Intent().apply {
-                        action = "com.mog.bondoman.jwtservice"
-                        putExtra("VALID_TOKEN", false)
-                    }
-                    Log.d("JWT", "Send broadcast")
-
-                    sendBroadcast(broadcaster)
-                    break
+                    sessionManager.removeAuthToken()
                 }
                 delay(interval)
             }
@@ -59,6 +49,7 @@ class JwtService : Service() {
     private suspend fun validateToken(): LoggedInUser? {
         return withContext(Dispatchers.IO) {
             val token = sessionManager.fetchAuthToken()
+            Log.d("JWT Validate", token ?: "no token to validate")
             if (token == null) {
                 null
             } else {
@@ -68,13 +59,11 @@ class JwtService : Service() {
 
                     LoggedInUser(response.nim, token)
                 } catch (e: Throwable) {
+                    Log.e("JWT Validate", e.message ?: "error on validating jwt")
                     null
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+//        TODO: fix error validate after 1 minute
     }
 }
