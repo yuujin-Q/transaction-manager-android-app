@@ -42,6 +42,8 @@
     <string name="menu_graf">Graf</string>
     <string name="menu_pengaturan">Pengaturan</string>
 
+    <string name="add_location_button_description">Add your current location</string>
+
     <!--  Transaction string values  -->
     <string name="add_transaction_description">Add a new transaction</string>
 

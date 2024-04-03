@@ -31,7 +31,7 @@ class TransactionListAdapter(private val transactionRecyclerViewOnClickListener:
             } else {
                 // bind click location symbol & location name to maps intent
                 val locationClickListener = View.OnClickListener {
-                    transactionRecyclerViewOnClickListener.openMap(binding.transactionItemLocation.text.toString())
+                    transactionRecyclerViewOnClickListener.openMap(binding.transaction!!.location)
                 }
                 binding.locationSymbol.setOnClickListener(locationClickListener)
                 binding.transactionItemLocation.setOnClickListener(locationClickListener)

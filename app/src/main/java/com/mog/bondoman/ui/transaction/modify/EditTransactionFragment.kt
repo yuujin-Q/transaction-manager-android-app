@@ -52,6 +52,9 @@ class EditTransactionFragment : ModifyTransactionFragment() {
             transactionInputBinding,
             updateTransactionButton
         )
+
+        setLocationButtonOnClick(binding.transactionInputField.addLocationButton, transactionInputBinding)
+
         setButtonClickListeners(transactionInputBinding, ongoingUpdateTransaction)
     }
 
