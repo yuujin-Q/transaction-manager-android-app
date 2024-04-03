@@ -36,6 +36,9 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="invalid_login">Invalid credentials</string>
+    <string name="invalid_login_http">HTTP Error</string>
+    <string name="unknown_host">Unable to Reach Server</string>
+    <string name="disconnected_network">Disconnected from Server</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_transaction">Transaction</string>
