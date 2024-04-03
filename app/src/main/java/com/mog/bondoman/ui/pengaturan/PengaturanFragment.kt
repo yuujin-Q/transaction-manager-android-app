@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.mog.bondoman.R
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentPengaturanBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,9 +43,5 @@ class PengaturanFragment : Fragment() {
 
     private fun onNegativeClick() {
         sessionManager.removeAuthToken()
-
-        // app bar causes two layer of parents between this fragment and HomeFragment
-        requireParentFragment().requireParentFragment().findNavController()
-            .navigate(R.id.navigate_to_login)
     }
 }
