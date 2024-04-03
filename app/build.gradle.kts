@@ -46,7 +46,6 @@ android {
 
 dependencies {
 
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
     implementation("androidx.core:core-ktx:1.12.0")
@@ -66,6 +65,7 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.15.1")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.5.6")
+    implementation("com.google.android.gms:play-services-location:21.2.0")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
 
     // dagger hilt
