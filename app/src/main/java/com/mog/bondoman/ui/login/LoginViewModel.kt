@@ -1,5 +1,6 @@
 package com.mog.bondoman.ui.login
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -37,10 +38,19 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
                     )
                 }
 
-                else -> {
-                    _loginResult.postValue(LoginResult(error = R.string.login_failed))
+                is Result.Error -> {
+                    Log.d("LoginVM", result.exception.message ?: "Error VM Login")
+                    _loginResult.postValue(
+                        LoginResult(
+                            error = if (result.exception.message!!.startsWith(
+                                    "HTTP 4"
+                                )
+                            ) R.string.invalid_login else R.string.login_failed
+                        )
+                    )
                     _credentials.postValue(LoggedInUser(nim = "", token = ""))
                 }
+
             }
         }
     }

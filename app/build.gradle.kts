@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
     id("androidx.navigation.safeargs")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -66,6 +67,10 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.5.6")
     implementation("com.google.android.gms:play-services-location:21.2.0")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.1")
+
+    // dagger hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:hilt-android-compiler:2.51.1")
 
     // Room database
     implementation("androidx.room:room-runtime:2.6.1")

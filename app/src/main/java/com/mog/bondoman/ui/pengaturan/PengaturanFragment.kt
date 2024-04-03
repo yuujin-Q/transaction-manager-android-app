@@ -1,16 +1,16 @@
 package com.mog.bondoman.ui.pengaturan
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import com.mog.bondoman.R
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentPengaturanBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class PengaturanFragment : Fragment() {
     private var _binding: FragmentPengaturanBinding? = null
 
@@ -18,7 +18,8 @@ class PengaturanFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    private lateinit var sessionManager: SessionManager
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,12 +28,6 @@ class PengaturanFragment : Fragment() {
     ): View {
         _binding = FragmentPengaturanBinding.inflate(inflater, container, false)
 
-        sessionManager = SessionManager.getInstance(
-            requireActivity().applicationContext.getSharedPreferences(
-                SessionManager.PREF_KEY,
-                Context.MODE_PRIVATE
-            )
-        )
 
         binding.logout.setOnClickListener {
             onNegativeClick()
@@ -48,9 +43,5 @@ class PengaturanFragment : Fragment() {
 
     private fun onNegativeClick() {
         sessionManager.removeAuthToken()
-
-        // app bar causes two layer of parents between this fragment and HomeFragment
-        requireParentFragment().requireParentFragment().findNavController()
-            .navigate(R.id.navigate_to_login)
     }
 }

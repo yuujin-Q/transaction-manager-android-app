@@ -7,55 +7,39 @@ import android.util.Log
 import com.mog.bondoman.data.connection.ApiClient
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.data.model.LoggedInUser
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class JwtService : Service() {
     private val interval: Long = 60 * 1000      // per minute
     private val apiClient = ApiClient()
-    private lateinit var sessionManager: SessionManager
-    private val serviceJob = Job()
-    private val serviceScope = CoroutineScope(Dispatchers.IO + serviceJob)
 
-
-    override fun onCreate() {
-        super.onCreate()
-        sessionManager = SessionManager.getInstance(
-            applicationContext.getSharedPreferences(
-                SessionManager.PREF_KEY,
-                MODE_PRIVATE
-            )
-        )
-    }
+    @Inject
+    lateinit var sessionManager: SessionManager
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        serviceScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             while (true) {
+                Log.d("JWT Cached", sessionManager.fetchNim() ?: "no nim")
+                Log.d("JWT Cached", sessionManager.fetchAuthToken() ?: "no token")
                 val tokenValidation = validateToken()
-                Log.d("JWT", tokenValidation?.nim ?: "no nim")
-                Log.d("JWT", tokenValidation?.token ?: "no token")
 
-                val broadcaster = Intent().apply {
-                    action = "TOKEN_CHECK"
-                    putExtra("TOKEN_CHECK_IS_VALID", tokenValidation != null)
-                    putExtra("TOKEN_CHECK_TOKEN", tokenValidation?.token)
-                    putExtra("TOKEN_CHECK_NIM", tokenValidation?.nim)
+                if (tokenValidation == null) {
+                    Log.d("JWT Validate", "Invalid JWT")
+                    sessionManager.removeAuthToken()
                 }
-
-//                TODO: fix jwt service
-                Log.d("JWT", "Send broadcast")
-                sendBroadcast(broadcaster)
-
-//                if (tokenValidation == null) {
-//                    sessionManager.removeAuthToken()
-//                }
-
-                Thread.sleep(interval)
+                Log.d("JWT Validate", "Valid JWT, Continue")
+                delay(interval)
             }
+
         }
+
         return START_STICKY
     }
 
@@ -66,23 +50,21 @@ class JwtService : Service() {
     private suspend fun validateToken(): LoggedInUser? {
         return withContext(Dispatchers.IO) {
             val token = sessionManager.fetchAuthToken()
+            Log.d("JWT Validate", token ?: "no token to validate")
             if (token == null) {
                 null
             } else {
                 try {
                     val response =
-                        apiClient.getApiService().checkToken(token)
+                        apiClient.getApiService().checkToken("Bearer $token")
 
                     LoggedInUser(response.nim, token)
                 } catch (e: Throwable) {
+                    Log.e("JWT Validate", e.message ?: "error on validating jwt")
                     null
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        serviceJob.cancel()
+//        TODO: fix error validate after 1 minute
     }
 }
