@@ -6,7 +6,6 @@ import com.mog.bondoman.data.model.LoggedInUser
 import com.mog.bondoman.data.payload.LoginPayload
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.IOException
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -30,9 +29,9 @@ class LoginDataSource(private val apiClient: ApiClient) {
 
                 val loggedInUser = LoggedInUser(tokenCheck.nim, token)
                 Result.Success(loggedInUser)
-            } catch (e: Throwable) {
-                Log.d("DataSource", e.message ?: "Error")
-                Result.Error(IOException(e.message, e))
+            } catch (e: Exception) {
+                Log.e("LoginDataSource", e.message ?: "Error Login")
+                Result.Error(e)
             }
         }
     }

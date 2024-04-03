@@ -1,6 +1,5 @@
 package com.mog.bondoman.ui.login
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,6 +11,8 @@ import com.mog.bondoman.data.Result
 import com.mog.bondoman.data.model.LoggedInUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.UnknownHostException
 
 class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
 
@@ -25,7 +26,6 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
     val credentials: LiveData<LoggedInUser> = _credentials
 
     fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
         viewModelScope.launch(Dispatchers.IO) {
             when (val result = loginRepository.login(username, password)) {
                 is Result.Success -> {
@@ -39,15 +39,26 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
                 }
 
                 is Result.Error -> {
-                    Log.d("LoginVM", result.exception.message ?: "Error VM Login")
-                    _loginResult.postValue(
-                        LoginResult(
-                            error = if (result.exception.message!!.startsWith(
-                                    "HTTP 4"
-                                )
-                            ) R.string.invalid_login else R.string.login_failed
+                    if (result.exception is HttpException) {
+                        _loginResult.postValue(
+                            LoginResult(
+                                error = if (result.exception.code() == 400) R.string.invalid_login else R.string.invalid_login_http
+                            )
                         )
-                    )
+                    } else if (result.exception is UnknownHostException) {
+                        _loginResult.postValue(
+                            LoginResult(
+                                error = R.string.unknown_host
+                            )
+                        )
+                    } else {
+                        _loginResult.postValue(
+                            LoginResult(
+                                error = R.string.login_failed
+                            )
+                        )
+                    }
+
                     _credentials.postValue(LoggedInUser(nim = "", token = ""))
                 }
 
