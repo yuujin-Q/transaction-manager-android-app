@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
         binding.navView.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graf, R.id.nav_settings
+                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graph, R.id.nav_settings
                 ),
                 binding.drawerLayout
             )
@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
         binding.appBarMain.contentMain.bottomNavView?.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graf
+                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graph
                 )
             )
             binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)

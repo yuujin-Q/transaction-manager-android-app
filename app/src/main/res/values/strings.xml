@@ -40,7 +40,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_transaction">Transaction</string>
     <string name="menu_scan">Scan</string>
-    <string name="menu_graf">Graf</string>
+    <string name="menu_graph">Graph</string>
     <string name="menu_pengaturan">Pengaturan</string>
 
     <string name="add_location_button_description">Add your current location</string>
