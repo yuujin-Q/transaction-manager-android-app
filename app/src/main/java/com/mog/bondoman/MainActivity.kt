@@ -31,12 +31,6 @@ class MainActivity : AppCompatActivity() {
         Log.d("Main", "Process ${android.os.Process.myPid()}")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-//        SessionManager.initialize(
-//            applicationContext.getSharedPreferences(
-//                SessionManager.PREF_KEY,
-//                MODE_PRIVATE
-//            )
-//        )
 
         jwtServiceIntent = Intent(this.applicationContext, JwtService::class.java)
         setContentView(binding.root)

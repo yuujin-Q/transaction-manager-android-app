@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +26,9 @@ object SessionManagerProvider {
 
 class SessionManager(context: Context) {
     private var prefs: SharedPreferences
+    private val _isValidSession = MutableLiveData<Boolean>()
+    val isValidSession: LiveData<Boolean> = _isValidSession
+
 
     companion object {
         const val USER_TOKEN = "user_token"
@@ -42,16 +47,9 @@ class SessionManager(context: Context) {
         editor.putString(NIM, nim)
         editor.commit()
 
+        _isValidSession.postValue(true)
         Log.d("SessionMan save", this.fetchNim() ?: "empty nim on session")
         Log.d("SessionMan save", this.fetchAuthToken() ?: "empty token on session")
-    }
-
-    fun fetchAuthToken(): String? {
-        return prefs.getString(USER_TOKEN, null)
-    }
-
-    fun fetchNim(): String? {
-        return prefs.getString(NIM, null)
     }
 
     @SuppressLint("ApplySharedPref")
@@ -61,7 +59,16 @@ class SessionManager(context: Context) {
         editor.remove(NIM)
         editor.commit()
 
+        _isValidSession.postValue(false)
         Log.d("SessionMan remove", this.fetchNim() ?: "empty nim on session")
         Log.d("SessionMan remove", this.fetchAuthToken() ?: "empty token on session")
+    }
+
+    fun fetchAuthToken(): String? {
+        return prefs.getString(USER_TOKEN, null)
+    }
+
+    fun fetchNim(): String? {
+        return prefs.getString(NIM, null)
     }
 }

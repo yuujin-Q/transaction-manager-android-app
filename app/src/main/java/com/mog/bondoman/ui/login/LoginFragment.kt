@@ -26,22 +26,6 @@ class LoginFragment : Fragment() {
     lateinit var sessionManager: SessionManager
     private lateinit var loginViewModel: LoginViewModel
     private var _binding: FragmentLoginBinding? = null
-//    private val broadcastReceiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context?, intent: Intent?) {
-//            Log.d("Broadcast receiver", "receive")
-//            if (intent?.action == "TOKEN_CHECK") {
-//                val isValid = intent.getBooleanExtra("TOKEN_CHECK_IS_VALID", false)
-//                val checkToken = intent.getStringExtra("TOKEN_CHECK_TOKEN")
-//                val checkNim = intent.getStringExtra("TOKEN_CHECK_NIM")
-//
-//                Log.d("Broadcast receiver", "token ${checkToken ?: "no token"}")
-//                Log.d("Broadcast receiver", "nim ${checkNim ?: "no nim"}")
-////                if (isValid) {
-////                    findNavController().navigate(R.id.navigate_to_home)
-////                }
-//            }
-//        }
-//    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -51,7 +35,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -95,10 +79,20 @@ class LoginFragment : Fragment() {
             })
 
         loginViewModel.credentials.observe(viewLifecycleOwner,
-            Observer { creds ->
-                creds ?: return@Observer
-                if (creds.nim.isNotEmpty() && creds.token.isNotEmpty()) {
-                    sessionManager.saveAuthToken(creds.nim, creds.token)
+            Observer { credential ->
+                credential ?: return@Observer
+                if (credential.nim.isNotEmpty() && credential.token.isNotEmpty()) {
+                    sessionManager.saveAuthToken(credential.nim, credential.token)
+                }
+            })
+
+        sessionManager.isValidSession.observe(viewLifecycleOwner,
+            Observer { isValid ->
+                if (isValid) {
+                    val nim = sessionManager.fetchNim()
+                    updateUiWithUser(LoggedInUserView(nim!!))
+                } else {
+                    return@Observer
                 }
             })
 
@@ -137,25 +131,7 @@ class LoginFragment : Fragment() {
                 passwordEditText.text.toString()
             )
         }
-
-        val token = sessionManager.fetchAuthToken()
-        if (token != null) {
-//            TODO validate JWT from service?
-            val nim = sessionManager.fetchNim()!!
-            updateUiWithUser(LoggedInUserView(nim))
-        }
     }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        requireActivity().registerReceiver(
-//            this.broadcastReceiver,
-//            IntentFilter("TOKEN_CHECK"),
-//            null,
-//            null,
-//            Context.RECEIVER_NOT_EXPORTED
-//        )
-//    }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
         val welcome = getString(R.string.welcome) + model.displayName
