@@ -6,11 +6,16 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mog.bondoman.data.Result
+import com.mog.bondoman.data.model.LoggedInUser
+import com.mog.bondoman.data.payload.LoginPayload
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Singleton
 
 
@@ -28,6 +33,7 @@ class SessionManager(context: Context) {
     private var prefs: SharedPreferences
     private val _isValidSession = MutableLiveData<Boolean>()
     val isValidSession: LiveData<Boolean> = _isValidSession
+    private val apiClient = ApiClient()
 
 
     companion object {
@@ -71,4 +77,47 @@ class SessionManager(context: Context) {
     fun fetchNim(): String? {
         return prefs.getString(NIM, null)
     }
+
+    suspend fun login(email: String, password: String): Result<LoggedInUser> {
+        // handle login
+        return withContext(Dispatchers.IO) {
+            try {
+                val response = withContext(Dispatchers.IO) {
+                    apiClient.getApiService()
+                        .login(LoginPayload(email = email, password = password))
+                }
+
+                val token = response.token
+
+                val tokenCheck = withContext(Dispatchers.IO) {
+                    apiClient.getApiService()
+                        .checkToken(token = "Bearer $token")
+                }
+
+                val loggedInUser = LoggedInUser(tokenCheck.nim, token)
+                Result.Success(loggedInUser)
+            } catch (e: Exception) {
+                Log.e("LoginDataSource", e.message ?: "Error Login")
+                Result.Error(e)
+            }
+        }
+    }
+
+    suspend fun tokenCheck(): Boolean {
+        return withContext(Dispatchers.IO) {
+            val token = fetchAuthToken()
+            try {
+                val response = apiClient.getApiService().checkToken("Bearer $token")
+
+                Log.d("SessionMan Token", "Session valid, " + response.nim)
+                _isValidSession.postValue(true)
+                return@withContext true
+            } catch (e: Throwable) {
+                Log.e("SessionMan Token", e.message ?: "Error Validating JWT")
+                _isValidSession.postValue(false)
+                return@withContext false
+            }
+        }
+    }
+
 }
