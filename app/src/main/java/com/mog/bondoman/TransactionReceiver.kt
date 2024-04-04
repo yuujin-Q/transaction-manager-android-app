@@ -3,41 +3,65 @@ package com.mog.bondoman
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
-import com.mog.bondoman.ui.transaction.TransactionFragment
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-class TransactionReceiver(private val activity: MainActivity) : BroadcastReceiver() {
+class TransactionReceiver : BroadcastReceiver() {
     companion object {
         const val EXTRA_TRANSACTION_TITLE = "TRANSACTION_TITLE"
         const val EXTRA_TRANSACTION_CATEGORY = "TRANSACTION_CATEGORY"
     }
 
+    private lateinit var fragment: Fragment
+    private val transactionNavController = MutableLiveData<NavController>()
+    private var ongoingNavigation = false
+    private var args: Bundle? = null
+
+    fun attachFragment(fragment: Fragment) {
+        this.fragment = fragment
+        transactionNavController.observe(fragment.requireActivity()) {
+            Log.d("TransactionRecv", "Navigation updated!")
+            if (ongoingNavigation) {
+                Log.d("TransactionRecv", "Navigating to addTransaction!")
+                it.navigate(R.id.addTransactionFragment, args)
+                ongoingNavigation = false
+            }
+        }
+    }
+
+    fun setDestinationNavController(navController: NavController) {
+        Log.d("TransactionRecv", "Navigation updated?")
+        transactionNavController.value = navController
+    }
+
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("TransactionReceiver", "Transaction received")
+        ongoingNavigation = true
         Toast.makeText(context, "ambatublow", Toast.LENGTH_SHORT).show()
 
-        val args = intent.extras!!
-        args.putInt(
-            TransactionFragment.TRANSACTION_REQUEST_TYPE,
-            TransactionFragment.REQUEST_ADD_TRANSACTION
-        )
-        val title = args.getString(EXTRA_TRANSACTION_TITLE)
-        val category = args.getString(EXTRA_TRANSACTION_CATEGORY)
+        args = intent.extras!!
 
-        Log.d("TransactionReceiver", title!!)
-        Log.d("TransactionReceiver", category!!)
+        fragment.requireActivity()
+            .findNavController(R.id.nav_host_fragment_content_main)
+            .navigate(R.id.transactionFragment)
+    }
+}
 
-//        TODO navigate to add transaction fragment
-//        val navController = activity.findNavController(R.id.nav_host_fragment_content_main)
-//        navController.navigate(R.id.transactionFragment)
-//        val mainNavView = activity.findViewById<View>(R.id.nav_host_fragment_content_main)
-//        Log.d("navigationaaahhh", mainNavView.toString())
-//        val childNavView = mainNavView.findViewById<View>(R.id.transactionFragment)
-//        Log.d("navigationaaahhh", childNavView.toString())
-//        childNavController.navigate(R.id.editTransactionFragment, args)
-
-//        activity.findNavController(R.id.nav_host_fragment_content_main)
-//            .navigatorProvider += Navigator().
+@Module
+@InstallIn(SingletonComponent::class)
+object TransactionReceiverProvider {
+    @Singleton
+    @Provides
+    fun provideTransactionReceiver(): TransactionReceiver {
+        return TransactionReceiver()
     }
 }

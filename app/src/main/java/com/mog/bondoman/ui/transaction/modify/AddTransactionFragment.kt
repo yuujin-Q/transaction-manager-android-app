@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.mog.bondoman.TransactionReceiver
 import com.mog.bondoman.databinding.FragmentAddTransactionBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +34,14 @@ class AddTransactionFragment : ModifyTransactionFragment() {
             binding.transactionInputField.editTransactionNominal,
             binding.transactionInputField.editTransactionLocation,
         )
+
+        if (arguments != null) {
+            transactionInputBinding.titleEditText
+                .setText(requireArguments().getString(TransactionReceiver.EXTRA_TRANSACTION_TITLE))
+            transactionInputBinding.categoryEditText
+                .setText(requireArguments().getString(TransactionReceiver.EXTRA_TRANSACTION_CATEGORY))
+        }
+
         val addTransactionButton = binding.addTransactionButton
         // set form listener to validate input
         setFormInputListeners(transactionInputBinding, addTransactionButton)
