@@ -44,14 +44,16 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext()))
-            .get(LoginViewModel::class.java)
+        loginViewModel =
+            ViewModelProvider(this, LoginViewModelFactory(requireContext(), sessionManager))
+                .get(LoginViewModel::class.java)
 
         val usernameEditText = binding.username
         val passwordEditText = binding.password
         val loginButton = binding.login
         val loadingProgressBar = binding.loading
 
+        // field validation observer
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
                 if (loginFormState == null) {
@@ -66,6 +68,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
+        // login result validation
         loginViewModel.loginResult.observe(viewLifecycleOwner,
             Observer { loginResult ->
                 loginResult ?: return@Observer
@@ -78,6 +81,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
+        //
         loginViewModel.credentials.observe(viewLifecycleOwner,
             Observer { credential ->
                 credential ?: return@Observer
@@ -86,6 +90,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
+        // session manager
         sessionManager.isValidSession.observe(viewLifecycleOwner,
             Observer { isValid ->
                 if (isValid) {

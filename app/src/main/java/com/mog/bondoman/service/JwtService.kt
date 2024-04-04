@@ -4,7 +4,6 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import android.util.Log
-import com.mog.bondoman.data.connection.ApiClient
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.data.model.LoggedInUser
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +17,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class JwtService : Service() {
     private val interval: Long = 60 * 1000      // per minute
-    private val apiClient = ApiClient()
 
     @Inject
     lateinit var sessionManager: SessionManager
@@ -54,17 +52,14 @@ class JwtService : Service() {
             if (token == null) {
                 null
             } else {
-                try {
-                    val response =
-                        apiClient.getApiService().checkToken("Bearer $token")
-
-                    LoggedInUser(response.nim, token)
-                } catch (e: Throwable) {
-                    Log.e("JWT Validate", e.message ?: "error on validating jwt")
+                val isValid = sessionManager.tokenCheck()
+                if (isValid) {
+                    LoggedInUser(sessionManager.fetchNim()!!, token)
+                } else {
+                    Log.e("JWT Validate", "Error on validating jwt")
                     null
                 }
             }
         }
-//        TODO: fix error validate after 1 minute
     }
 }
