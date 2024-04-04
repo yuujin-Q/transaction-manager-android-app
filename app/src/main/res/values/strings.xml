@@ -7,21 +7,10 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_transform">Transform</string>
-    <string name="menu_reflow">Reflow</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_settings">Settings</string>
-
     <string name="login">Login</string>
     <string name="email_placeholder">Enter your Email</string>
     <string name="password_placeholder">Enter your Password</string>
 
-    <string name="lorem_ipsum_title">Lorem Ipsum"</string>
-    <string name="lorem_ipsum">Lorem Ipsum is simply placeholder text of the printing and
-        typesetting industry. Lorem Ipsum has been the industry\'s standard placeholder text ever
-        since the 1500s, when an unknown printer took a galley of type and scrambled it to make a
-        type specimen book"
-    </string>
     <string name="fab_content_description">Represents a view to invoke an action</string>
     <string name="image_view_item_transform_content_description">Represents an image view in the
         item
@@ -39,22 +28,31 @@
     <string name="invalid_login_http">HTTP Error</string>
     <string name="unknown_host">Unable to Reach Server</string>
     <string name="disconnected_network">Disconnected from Server</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="menu_transaction">Transaction</string>
     <string name="menu_twibbon">Twibbon</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_graph">Graph</string>
-    <string name="menu_pengaturan">Settings</string>
+    <string name="menu_settings">Settings</string>
+
+    <string name="column_date">Tanggal</string>
+    <string name="column_transaction_category">Kategori Transaksi</string>
+    <string name="column_nominal">Nominal Transaksi</string>
+    <string name="column_transaction_name">Nama Transaksi</string>
+    <string name="column_location">Lokasi</string>
 
     <string name="add_location_button_description">Add your current location</string>
 
     <!--  Transaction string values  -->
     <string name="add_transaction_description">Add a new transaction</string>
 
-    <string name="simpan_daftar_transaksi">Simpan Daftar Transaksi</string>
-    <string name="kirim_daftar_transaksi">Kirim Daftar Transaksi</string>
-    <string name="keluar">Keluar</string>
+    <string name="save_transactions_xls">Simpan Daftar Transaksi (.xls)</string>
+    <string name="save_transactions_xlsx">Simpan Daftar Transaksi (.xlsx)</string>
+    <string name="send_transactions">Kirim Daftar Transaksi</string>
+    <string name="logout">Keluar</string>
+
+    <string name="save_transactions_success">Berhasil Tersimpan</string>
+    <string name="save_transactions_fail">Gagal Tersimpan</string>
 
     <string name="transaction_input_title">Title</string>
     <string name="transaction_input_category">Category</string>
@@ -65,7 +63,7 @@
     <string name="delete_transaction_button">Delete Transaction</string>
 
     <string name="empty_field">Field must not be empty</string>
-    <string name="invalid_positive_number">Number must not be negative</string>
+    <string name="invalid_number">Number must be a standard decimal value</string>
 
 
 </resources>

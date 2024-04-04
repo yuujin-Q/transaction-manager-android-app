@@ -1,4 +1,4 @@
-package com.mog.bondoman.ui.graf
+package com.mog.bondoman.ui.graph
 
 
 import android.graphics.Color
@@ -18,15 +18,15 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.MPPointF
 import com.mog.bondoman.R
-import com.mog.bondoman.databinding.FragmentGrafBinding
+import com.mog.bondoman.databinding.FragmentGraphBinding
 import com.mog.bondoman.ui.transaction.TransactionViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class GrafFragment : Fragment() {
+class GraphFragment : Fragment() {
     private val transactionViewModel: TransactionViewModel by activityViewModels()
-    private var _binding: FragmentGrafBinding? = null
+    private var _binding: FragmentGraphBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -40,7 +40,7 @@ class GrafFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_graf, container, false)
+        val view = inflater.inflate(R.layout.fragment_graph, container, false)
         pieChart = view.findViewById(R.id.pieChart)
         return view
     }
