@@ -39,21 +39,30 @@
     <string name="invalid_login_http">HTTP Error</string>
     <string name="unknown_host">Unable to Reach Server</string>
     <string name="disconnected_network">Disconnected from Server</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="menu_transaction">Transaction</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_graph">Graph</string>
     <string name="menu_pengaturan">Pengaturan</string>
+
+    <string name="column_date">Tanggal</string>
+    <string name="column_transaction_category">Kategori Transaksi</string>
+    <string name="column_nominal">Nominal Transaksi</string>
+    <string name="column_transaction_name">Nama Transaksi</string>
+    <string name="column_location">Lokasi</string>
 
     <string name="add_location_button_description">Add your current location</string>
 
     <!--  Transaction string values  -->
     <string name="add_transaction_description">Add a new transaction</string>
 
-    <string name="simpan_daftar_transaksi">Simpan Daftar Transaksi</string>
-    <string name="kirim_daftar_transaksi">Kirim Daftar Transaksi</string>
-    <string name="keluar">Keluar</string>
+    <string name="save_transactions_xls">Simpan Daftar Transaksi (.xls)</string>
+    <string name="save_transactions_xlsx">Simpan Daftar Transaksi (.xlsx)</string>
+    <string name="send_transactions">Kirim Daftar Transaksi</string>
+    <string name="logout">Keluar</string>
+
+    <string name="save_transactions_success">Berhasil Tersimpan</string>
+    <string name="save_transactions_fail">Gagal Tersimpan</string>
 
     <string name="transaction_input_title">Title</string>
     <string name="transaction_input_category">Category</string>
