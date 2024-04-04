@@ -1,4 +1,5 @@
-package com.mog.bondoman.ui.reflow
+package com.mog.bondoman.ui.graph
+
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.mog.bondoman.databinding.FragmentReflowBinding
+import com.mog.bondoman.databinding.FragmentGraphBinding
 
-class ReflowFragment : Fragment() {
-
-    private var _binding: FragmentReflowBinding? = null
+class GraphFragment : Fragment() {
+    private var _binding: FragmentGraphBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -22,14 +22,14 @@ class ReflowFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val reflowViewModel =
-            ViewModelProvider(this).get(ReflowViewModel::class.java)
+        val graphViewModel =
+            ViewModelProvider(this)[GraphViewModel::class.java]
 
-        _binding = FragmentReflowBinding.inflate(inflater, container, false)
+        _binding = FragmentGraphBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textReflow
-        reflowViewModel.text.observe(viewLifecycleOwner) {
+        val textView: TextView = binding.textGraf
+        graphViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
         return root

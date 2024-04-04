@@ -37,7 +37,10 @@ class AddTransactionFragment : ModifyTransactionFragment() {
         // set form listener to validate input
         setFormInputListeners(transactionInputBinding, addTransactionButton)
 
-        setLocationButtonOnClick(binding.transactionInputField.addLocationButton, transactionInputBinding)
+        setLocationButtonOnClick(
+            binding.transactionInputField.addLocationButton,
+            transactionInputBinding
+        )
 
         addTransactionButton.setOnClickListener {
             val newTransaction =

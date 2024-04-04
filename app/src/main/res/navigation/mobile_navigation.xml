@@ -3,34 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_transaction">
+    app:startDestination="@id/transactionFragment">
 
     <fragment
-        android:id="@+id/nav_transaction"
+        android:id="@+id/transactionFragment"
         android:name="com.mog.bondoman.ui.transaction.TransactionFragment"
         android:label="@string/menu_transaction"
-        tools:layout="@layout/fragment_transaction">
-        <action
-            android:id="@+id/action_nav_transaction_to_transaction_navigation"
-            app:destination="@id/transaction_navigation" />
-    </fragment>
+        tools:layout="@layout/fragment_transaction" />
 
     <fragment
-        android:id="@+id/nav_scan"
+        android:id="@+id/scanFragment"
         android:name="com.mog.bondoman.ui.scan.ScanFragment"
         android:label="@string/menu_scan"
         tools:layout="@layout/fragment_scan" />
 
     <fragment
-        android:id="@+id/nav_graph"
-        android:name="com.mog.bondoman.ui.graf.GrafFragment"
+        android:id="@+id/graphFragment"
+        android:name="com.mog.bondoman.ui.graph.GraphFragment"
         android:label="@string/menu_graph"
-        tools:layout="@layout/fragment_graf" />
+        tools:layout="@layout/fragment_graph" />
 
     <fragment
-        android:id="@+id/nav_settings"
+        android:id="@+id/settingsFragment"
         android:name="com.mog.bondoman.ui.settings.SettingsFragment"
-        android:label="@string/menu_pengaturan"
+        android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
 
     <include app:graph="@navigation/transaction_navigation" />
