@@ -22,18 +22,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.517" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/idTVHead"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="4dp"-->
-<!--        android:gravity="center"-->
-<!--        android:padding="4dp"-->
-<!--        android:text="Pie Chart"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textColor="@color/purple_200"-->
-<!--        android:textSize="20sp"-->
-<!--        android:textStyle="bold" />-->
+    <TextView
+        android:id="@+id/idTVHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="Pie Chart"
+        android:textAlignment="center"
+        android:textColor="@color/purple_200"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"

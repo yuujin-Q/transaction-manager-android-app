@@ -36,10 +36,10 @@ class MainActivity : AppCompatActivity() {
 //            )
 //        )
 
-        jwtServiceIntent = Intent(this, JwtService::class.java)
-        setContentView(binding.root)
-
-        startService(jwtServiceIntent)
+//        jwtServiceIntent = Intent(this, JwtService::class.java)
+//        setContentView(binding.root)
+//
+//        startService(jwtServiceIntent)
 
         // initialize transaction repository
         transactionViewModel = ViewModelProvider(this)[TransactionViewModel::class.java]
