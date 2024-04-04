@@ -2,6 +2,7 @@ package com.mog.bondoman.ui
 
 import android.content.Context
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -48,7 +49,16 @@ class HomeFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         transactionReceiver.attachFragment(this)
-        this.requireActivity().registerReceiver(transactionReceiver, transactionIntentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            this.requireActivity()
+                .registerReceiver(
+                    transactionReceiver,
+                    transactionIntentFilter,
+                    Context.RECEIVER_NOT_EXPORTED
+                )
+        } else {
+            this.requireActivity().registerReceiver(transactionReceiver, transactionIntentFilter)
+        }
     }
 
     override fun onCreateView(
