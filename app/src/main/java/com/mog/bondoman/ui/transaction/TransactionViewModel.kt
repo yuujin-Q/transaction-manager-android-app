@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mog.bondoman.data.model.Transaction
 import com.mog.bondoman.data.TransactionRepository
+import com.mog.bondoman.data.model.Transaction
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -58,5 +58,19 @@ class TransactionViewModel : ViewModel() {
 
     fun setOngoingUpdate(itemPosition: Int) {
         ongoingUpdate = itemPosition
+    }
+
+    suspend fun summarizeIncomeOutcome(): Pair<Double, Double> {
+        var income: Double = 0.0
+        var outcome: Double = 0.0
+        transactions.value!!.forEach {
+            if (it.nominal >= 0) {
+                income += it.nominal
+            } else {
+                outcome -= it.nominal
+            }
+        }
+
+        return Pair(income, outcome)
     }
 }

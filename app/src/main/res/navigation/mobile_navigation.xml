@@ -12,6 +12,12 @@
         tools:layout="@layout/fragment_transaction" />
 
     <fragment
+        android:id="@+id/nav_twibbon"
+        android:name="com.mog.bondoman.ui.twibbon.TwibbonFragment"
+        android:label="@string/menu_twibbon"
+        tools:layout="@layout/fragment_twibbon" />
+
+    <fragment
         android:id="@+id/scanFragment"
         android:name="com.mog.bondoman.ui.scan.ScanFragment"
         android:label="@string/menu_scan"
