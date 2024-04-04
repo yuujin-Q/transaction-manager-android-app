@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -46,6 +47,7 @@ class HomeFragment : Fragment() {
     lateinit var sessionManager: SessionManager
     private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onAttach(context: Context) {
         super.onAttach(context)
         transactionReceiver.attachFragment(this)
@@ -54,7 +56,7 @@ class HomeFragment : Fragment() {
                 .registerReceiver(
                     transactionReceiver,
                     transactionIntentFilter,
-                    Context.RECEIVER_NOT_EXPORTED
+                    Context.RECEIVER_EXPORTED
                 )
         } else {
             this.requireActivity().registerReceiver(transactionReceiver, transactionIntentFilter)
