@@ -7,27 +7,13 @@
     tools:context=".ui.settings.SettingsFragment">
 
     <Button
-        android:id="@+id/save_transactions_xls"
+        android:id="@+id/save_transactions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="96dp"
         android:layout_marginEnd="24dp"
         android:text="@string/save_transactions_xls"
-        app:layout_constraintBottom_toTopOf="@+id/save_transactions_xlsx"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/save_transactions_xlsx"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/save_transactions_xlsx"
         app:layout_constraintBottom_toTopOf="@+id/send_transaction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -41,22 +27,54 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:text="@string/send_transactions"
-        app:layout_constraintBottom_toTopOf="@+id/logout"
+        app:layout_constraintBottom_toTopOf="@+id/file_format"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_transactions_xlsx" />
+        app:layout_constraintTop_toBottomOf="@+id/save_transactions" />
+
+    <RadioGroup
+        android:id="@+id/file_format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:checkedButton="@id/xls"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/logout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/send_transaction">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/file_format_select_text" />
+
+        <RadioButton
+            android:id="@+id/xls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/xls" />
+
+        <RadioButton
+            android:id="@+id/xlsx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/xlsx" />
+
+    </RadioGroup>
 
     <Button
         android:id="@+id/logout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="128dp"
         android:layout_marginEnd="24dp"
+        android:backgroundTint="@color/purple_200"
         android:text="@string/logout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/send_transaction" />
+        app:layout_constraintTop_toBottomOf="@+id/file_format" />
 </androidx.constraintlayout.widget.ConstraintLayout>

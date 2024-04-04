@@ -45,8 +45,7 @@
     <!--  Transaction string values  -->
     <string name="add_transaction_description">Add a new transaction</string>
 
-    <string name="save_transactions_xls">Simpan Daftar Transaksi (.xls)</string>
-    <string name="save_transactions_xlsx">Simpan Daftar Transaksi (.xlsx)</string>
+    <string name="save_transactions_xls">Simpan Daftar Transaksi</string>
     <string name="send_transactions">Kirim Daftar Transaksi</string>
     <string name="logout">Keluar</string>
 
@@ -63,6 +62,9 @@
 
     <string name="empty_field">Field must not be empty</string>
     <string name="invalid_positive_number">Number must not be negative</string>
+    <string name="xlsx">XLSX</string>
+    <string name="xls">XLS</string>
+    <string name="file_format_select_text">File format:</string>
 
 
 </resources>

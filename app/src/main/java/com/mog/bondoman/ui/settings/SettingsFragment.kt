@@ -80,22 +80,24 @@ class SettingsFragment : Fragment() {
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-
         binding.logout.setOnClickListener {
             onLogoutClick()
         }
-        binding.saveTransactionsXls.setOnClickListener {
-            isXls = true
+        binding.saveTransactions.setOnClickListener {
             onSaveTransactionsClick()
         }
-        binding.saveTransactionsXlsx.setOnClickListener {
-            isXls = false
-            onSaveTransactionsClick()
-        }
-
         binding.sendTransaction.setOnClickListener {
             broadcastRandomTransaction()
         }
+
+        binding.xls.setOnCheckedChangeListener { _, isChecked ->
+            Log.d(
+                "Settings File Format",
+                if (isChecked) getString(R.string.xls) else getString(R.string.xlsx)
+            )
+            isXls = isChecked
+        }
+        isXls = binding.xls.isChecked
 
         return binding.root
     }
