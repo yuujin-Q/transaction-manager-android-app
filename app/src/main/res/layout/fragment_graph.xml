@@ -21,4 +21,89 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.517" />
+
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:id="@+id/pieChart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" >
+
+        <TextView
+            android:id="@+id/idTVHeadIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="7dp"
+            android:gravity="end"
+            android:padding="4dp"
+            android:text="PEMASUKAN"
+            android:textAlignment="textEnd"
+            android:textColor="@color/yellow"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/idTVHeadOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:gravity="start"
+            android:padding="4dp"
+            android:text="PENGELUARAN"
+            android:textAlignment="textStart"
+            android:textColor="@color/purple_200"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </com.github.mikephil.charting.charts.PieChart>
+
+<!--        android:layout_below="@id/idTVHead"/>-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical"
+        android:weightSum="3">
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="3dp"-->
+<!--                android:layout_weight="1"-->
+
+<!--                android:gravity="center"-->
+<!--                android:padding="4dp"-->
+<!--                android:text="Pengeluaran"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="@color/purple_200"-->
+<!--                app:drawableTint="@color/purple_200" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="3dp"-->
+<!--                android:layout_weight="1"-->
+
+<!--                android:gravity="center"-->
+<!--                android:padding="4dp"-->
+<!--                android:text="Pemasukan"-->
+<!--                android:textAlignment="center"-->
+<!--                android:textColor="@color/yellow"-->
+<!--                app:drawableTint="@color/yellow" />-->
+        <!--        <TextView-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_margin="3dp"-->
+        <!--            android:layout_weight="1"-->
+
+        <!--            android:drawableTint="@color/red"-->
+        <!--            android:gravity="center"-->
+        <!--            android:padding="4dp"-->
+        <!--            android:text="Microsoft"-->
+        <!--            android:textAlignment="center"-->
+        <!--            android:textColor="@color/black" />-->
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

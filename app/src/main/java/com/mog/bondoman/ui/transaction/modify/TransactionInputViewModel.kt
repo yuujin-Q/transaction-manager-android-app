@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mog.bondoman.R
 import com.mog.bondoman.data.model.Transaction
+import com.mog.bondoman.utils.ValueViewConverter
 import java.util.Date
 
 class TransactionInputViewModel : ViewModel() {
@@ -22,9 +23,9 @@ class TransactionInputViewModel : ViewModel() {
             _transactionFormState.value = TransactionFormState(titleError = R.string.empty_field)
         } else if (category.isBlank()) {
             _transactionFormState.value = TransactionFormState(categoryError = R.string.empty_field)
-        } else if (checkPositiveNominal(nominal)) {
+        } else if (checkNominalInvalid(nominal)) {
             _transactionFormState.value =
-                TransactionFormState(nominalError = R.string.invalid_positive_number)
+                TransactionFormState(nominalError = R.string.invalid_number)
 //        } else if (location.isBlank()) {
 //            _transactionFormState.value = TransactionFormState(locationError = R.string.empty_field)
         } else {
@@ -32,10 +33,11 @@ class TransactionInputViewModel : ViewModel() {
         }
     }
 
-    private fun checkPositiveNominal(nominal: String): Boolean {
-        if (nominal.isBlank()) return false
+    private fun checkNominalInvalid(nominal: String): Boolean {
+        if (nominal.isBlank()) return true
+        if (nominal == "-") return true
         val doubleNominal = nominal.toDouble()
-        return doubleNominal.isNaN() or (doubleNominal < 0)
+        return doubleNominal.isNaN() or doubleNominal.isInfinite()
     }
 
     companion object {
@@ -64,7 +66,11 @@ class TransactionInputViewModel : ViewModel() {
         ) {
             transactionInputBinding.titleEditText.setText(transaction.title)
             transactionInputBinding.categoryEditText.setText(transaction.category)
-            transactionInputBinding.nominalEditText.setText(transaction.nominal.toString())
+            transactionInputBinding.nominalEditText.setText(
+                ValueViewConverter.doubleToString(
+                    transaction.nominal
+                )
+            )
             transactionInputBinding.locationEditText.setText(transaction.location)
         }
 

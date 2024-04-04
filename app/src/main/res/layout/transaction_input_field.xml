@@ -34,7 +34,7 @@
         android:layout_marginVertical="10dp"
         android:autofillHints="@string/transaction_input_nominal"
         android:hint="@string/transaction_input_nominal"
-        android:inputType="numberDecimal" />
+        android:inputType="numberSigned|numberDecimal" />
 
     <LinearLayout
         android:layout_width="match_parent"
