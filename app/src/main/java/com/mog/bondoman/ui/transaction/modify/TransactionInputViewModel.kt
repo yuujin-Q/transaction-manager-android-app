@@ -34,10 +34,8 @@ class TransactionInputViewModel : ViewModel() {
     }
 
     private fun checkNominalInvalid(nominal: String): Boolean {
-        if (nominal.isBlank()) return true
-        if (nominal == "-") return true
-        val doubleNominal = nominal.toDouble()
-        return doubleNominal.isNaN() or doubleNominal.isInfinite()
+        val doubleNominal = nominal.toDoubleOrNull()
+        return doubleNominal == null || doubleNominal.isNaN() || doubleNominal.isInfinite()
     }
 
     companion object {
@@ -94,6 +92,7 @@ class TransactionInputViewModel : ViewModel() {
             transaction: Transaction,
             transactionInputBinding: TransactionInputBinding
         ) {
+            // precondition: is valid transaction
             val title = transactionInputBinding.titleEditText.text.toString()
             val category = transactionInputBinding.categoryEditText.text.toString()
             val nominal = transactionInputBinding.nominalEditText.text.toString().toDouble()
