@@ -10,49 +10,9 @@
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="100dp">
+        app:layout_constraintStart_toStartOf="parent">
 
     </androidx.camera.view.PreviewView>
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:gravity="center"-->
-<!--        android:orientation="horizontal">-->
-
-<!--        <Button-->
-<!--            android:id="@+id/camera_switch_button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Switch Camera" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/open_gallery_button"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Open Gallery"-->
-<!--            android:layout_marginStart="16dp"/>-->
-
-
-
-<!--    </LinearLayout>-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/text_scan"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="8dp"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:layout_marginEnd="8dp"-->
-<!--        android:textAlignment="center"-->
-<!--        android:textSize="20sp"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.517" />-->
 
     <ImageView
         android:id="@+id/imageView"
@@ -94,36 +54,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="560dp"/>
 
-    <Button
-        android:id="@+id/btnProcess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Process"
-        app:layout_constraintTop_toBottomOf="@id/btnGallery"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/btnRetry"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Retry"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="20dp"
-        android:visibility="gone"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

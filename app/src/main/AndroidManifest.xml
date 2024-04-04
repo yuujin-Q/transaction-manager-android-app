@@ -21,7 +21,6 @@
         android:name=".App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name="androidx.multidex.MultiDexApplication"
         android:theme="@style/Theme.BondoMan"
         tools:targetApi="31">
         <service
