@@ -86,7 +86,7 @@ class SettingsFragment : Fragment() {
         binding.saveTransactions.setOnClickListener {
             onSaveTransactionsClick()
         }
-        binding.sendTransaction.setOnClickListener {
+        binding.randomizeTransactions.setOnClickListener {
             broadcastRandomTransaction()
         }
 

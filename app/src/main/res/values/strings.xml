@@ -67,6 +67,7 @@
     <string name="xlsx">XLSX</string>
     <string name="xls">XLS</string>
     <string name="file_format_select_text">File format:</string>
+    <string name="randomize_transaksi">Randomize Transaksi</string>
 
 
 </resources>
