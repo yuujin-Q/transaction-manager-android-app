@@ -207,7 +207,7 @@ class ScanFragment : Fragment() {
         }
     }
     companion object {
-        private val CAMERAX_PERMISSIONS = arrayOf(
+        val CAMERAX_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
         )
@@ -252,7 +252,7 @@ class ScanFragment : Fragment() {
             return
         }
 
-        alertDialogBuilder.setPositiveButton("Contine") { _, _ ->
+        alertDialogBuilder.setPositiveButton("Continue") { _, _ ->
             // Upload the image to the server
             uploadImageToServer(imageBitmap)
         }
@@ -283,7 +283,8 @@ class ScanFragment : Fragment() {
         alertDialogBuilder.setPositiveButton("Continue") { _, _ ->
             // Handle scanning process here
             // For example: pass the URI to a scanning function
-            //scanImage(imageUri)
+            // scanImage(imageUri)
+            showResultDialog()
         }
         alertDialogBuilder.setNegativeButton("Cancel", null)
         alertDialogBuilder.show()
@@ -291,7 +292,7 @@ class ScanFragment : Fragment() {
 
     private fun showResultDialog() {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-        alertDialogBuilder.setTitle("Scan Result")
+        alertDialogBuilder.setTitle("Scan")
         alertDialogBuilder.setMessage("Scan completed successfully.")
         alertDialogBuilder.setNegativeButton("Cancel", null)
         alertDialogBuilder.setNegativeButton("OK") { _, _ ->
