@@ -1,7 +1,7 @@
 package com.mog.bondoman.ui.settings
 
-import android.app.Activity
 import android.content.Intent
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,9 +13,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mog.bondoman.R
+import com.mog.bondoman.TransactionReceiver
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentSettingsBinding
 import com.mog.bondoman.ui.transaction.TransactionViewModel
+import com.mog.bondoman.utils.Randomize
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -90,6 +92,10 @@ class SettingsFragment : Fragment() {
             onSaveTransactionsClick()
         }
 
+        binding.sendTransaction.setOnClickListener {
+            broadcastRandomTransaction()
+        }
+
         return binding.root
     }
 
@@ -116,6 +122,18 @@ class SettingsFragment : Fragment() {
 
     private fun onLogoutClick() {
         sessionManager.removeAuthToken()
+    }
+
+    private fun broadcastRandomTransaction() {
+        val intent = Intent("com.mog.bondoman.ADD_TRANSACTION")
+
+        val args = Bundle().apply {
+            this.putString(TransactionReceiver.EXTRA_TRANSACTION_TITLE, Randomize.string())
+            this.putString(TransactionReceiver.EXTRA_TRANSACTION_CATEGORY, Randomize.string())
+        }
+
+        intent.putExtras(args)
+        requireActivity().sendBroadcast(intent)
     }
 
     private suspend fun saveTransactions(output: OutputStream): Deferred<Boolean> {
