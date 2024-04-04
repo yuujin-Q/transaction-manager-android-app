@@ -1,15 +1,15 @@
 package com.mog.bondoman.ui.graf
 
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
-import com.mog.bondoman.databinding.FragmentGrafBinding
-import android.graphics.Color
-import android.graphics.Typeface
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
@@ -18,8 +18,14 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.utils.MPPointF
 import com.mog.bondoman.R
+import com.mog.bondoman.databinding.FragmentGrafBinding
+import com.mog.bondoman.ui.transaction.TransactionViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class GrafFragment : Fragment() {
+    private val transactionViewModel: TransactionViewModel by activityViewModels()
     private var _binding: FragmentGrafBinding? = null
 
     // This property is only valid between onCreateView and
@@ -62,8 +68,11 @@ class GrafFragment : Fragment() {
         pieChart.setEntryLabelTextSize(12f)
 
         val entries: ArrayList<PieEntry> = ArrayList()
-        entries.add(PieEntry(60f))
-        entries.add(PieEntry(40f))
+        CoroutineScope(Dispatchers.Default).launch {
+            val incomeOutcome = transactionViewModel.summarizeIncomeOutcome()
+            entries.add(PieEntry(incomeOutcome.second.toFloat()))
+            entries.add(PieEntry(incomeOutcome.first.toFloat()))
+        }
 
         val dataSet = PieDataSet(entries, "Mobile OS")
         dataSet.setDrawIcons(false)
