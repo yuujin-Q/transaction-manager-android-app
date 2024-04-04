@@ -36,7 +36,7 @@
         android:label="EditTransactionFragment"
         tools:layout="@layout/fragment_edit_transaction">
         <argument
-            android:name="item_position"
+            android:name="itemPosition"
             app:argType="integer" />
         <action
             android:id="@+id/action_editTransactionFragment_to_transactionRecyclerviewFragment"

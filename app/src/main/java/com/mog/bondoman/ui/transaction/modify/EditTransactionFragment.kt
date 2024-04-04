@@ -1,26 +1,19 @@
 package com.mog.bondoman.ui.transaction.modify
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.mog.bondoman.data.model.Transaction
 import com.mog.bondoman.databinding.FragmentEditTransactionBinding
-import com.mog.bondoman.ui.transaction.TransactionViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class EditTransactionFragment : Fragment() {
-    private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
-    private lateinit var transactionInputViewModel: TransactionInputViewModel
+class EditTransactionFragment : ModifyTransactionFragment() {
     private var _binding: FragmentEditTransactionBinding? = null
 
     private val binding get() = _binding!!
@@ -32,6 +25,8 @@ class EditTransactionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEditTransactionBinding.inflate(inflater, container, false)
+        // TURNS OUT CATEGORY IS NOT TO BE CHANGED
+        binding.transactionInputField.editTransactionCategory.visibility = View.GONE
         return binding.root
     }
 
@@ -50,40 +45,33 @@ class EditTransactionFragment : Fragment() {
             binding.transactionInputField.editTransactionNominal,
             binding.transactionInputField.editTransactionLocation,
         )
+        TransactionInputViewModel.applyDataToView(transactionInputBinding, ongoingUpdateTransaction)
+        val updateTransactionButton = binding.updateTransactionButton
+        // set form listener to validate input
+        setFormInputListeners(
+            transactionInputBinding,
+            updateTransactionButton
+        )
+
+        setLocationButtonOnClick(
+            binding.transactionInputField.addLocationButton,
+            transactionInputBinding
+        )
+
+        setButtonClickListeners(transactionInputBinding, ongoingUpdateTransaction)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setButtonClickListeners(
+        transactionInputBinding: TransactionInputBinding,
+        ongoingUpdateTransaction: Transaction
+    ) {
         val updateTransactionButton = binding.updateTransactionButton
         val deleteTransactionButton = binding.deleteTransactionButton
-
-        TransactionInputViewModel.applyDataToView(transactionInputBinding, ongoingUpdateTransaction)
-        // set observer for input validation
-        transactionInputViewModel.transactionFormState.observe(viewLifecycleOwner,
-            Observer { transactionFormState ->
-                if (transactionFormState == null) {
-                    return@Observer
-                }
-                updateTransactionButton.isEnabled = transactionFormState.isDataValid
-                TransactionInputViewModel.updateError(
-                    transactionFormState,
-                    transactionInputBinding,
-                    this
-                )
-            })
-
-        // check for data change
-        val afterTextChangedListener = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // ignore
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // ignore
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                transactionInputViewModel.transactionDataChanged(transactionInputBinding)
-            }
-        }
-        transactionInputBinding.addTextChangedListener(afterTextChangedListener)
-
         updateTransactionButton.setOnClickListener {
 //            TODO optimize: don't update DB if no change
             TransactionInputViewModel.updateTransaction(
@@ -101,10 +89,5 @@ class EditTransactionFragment : Fragment() {
             }
             parentFragmentManager.popBackStack()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

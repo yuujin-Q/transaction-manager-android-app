@@ -36,13 +36,32 @@
         android:hint="@string/transaction_input_nominal"
         android:inputType="numberDecimal" />
 
-    <EditText
-        android:id="@+id/edit_transaction_location"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_marginHorizontal="50dp"
-        android:layout_marginVertical="10dp"
-        android:autofillHints="@string/transaction_input_location"
-        android:hint="@string/transaction_input_location"
-        android:inputType="text" />
+        android:layout_marginVertical="10dp">
+
+        <EditText
+            android:id="@+id/edit_transaction_location"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:autofillHints="@string/transaction_input_location"
+            android:hint="@string/transaction_input_location"
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/add_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/add_location_button_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/edit_transaction_location"
+            app:layout_constraintTop_toBottomOf="@+id/edit_transaction_nominal"
+            app:srcCompat="@android:drawable/ic_menu_mylocation" />
+    </LinearLayout>
+
 </LinearLayout>

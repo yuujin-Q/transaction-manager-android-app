@@ -9,7 +9,11 @@
         android:id="@+id/nav_transaction"
         android:name="com.mog.bondoman.ui.transaction.TransactionFragment"
         android:label="@string/menu_transaction"
-        tools:layout="@layout/fragment_transaction" />
+        tools:layout="@layout/fragment_transaction">
+        <action
+            android:id="@+id/action_nav_transaction_to_transaction_navigation"
+            app:destination="@id/transaction_navigation" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_scan"
@@ -18,16 +22,16 @@
         tools:layout="@layout/fragment_scan" />
 
     <fragment
-        android:id="@+id/nav_graf"
+        android:id="@+id/nav_graph"
         android:name="com.mog.bondoman.ui.graf.GrafFragment"
-        android:label="@string/menu_graf"
+        android:label="@string/menu_graph"
         tools:layout="@layout/fragment_graf" />
 
     <fragment
-        android:id="@+id/nav_pengaturan"
-        android:name="com.mog.bondoman.ui.pengaturan.PengaturanFragment"
+        android:id="@+id/nav_settings"
+        android:name="com.mog.bondoman.ui.settings.SettingsFragment"
         android:label="@string/menu_pengaturan"
-        tools:layout="@layout/fragment_pengaturan" />
+        tools:layout="@layout/fragment_settings" />
 
     <include app:graph="@navigation/transaction_navigation" />
 </navigation>

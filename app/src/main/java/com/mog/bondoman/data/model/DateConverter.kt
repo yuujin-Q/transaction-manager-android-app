@@ -1,4 +1,4 @@
-package com.mog.bondoman.model.converters
+package com.mog.bondoman.data.model
 
 import androidx.room.TypeConverter
 import java.util.Date

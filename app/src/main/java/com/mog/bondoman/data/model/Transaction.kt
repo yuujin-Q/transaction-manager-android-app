@@ -1,4 +1,4 @@
-package com.mog.bondoman.model
+package com.mog.bondoman.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

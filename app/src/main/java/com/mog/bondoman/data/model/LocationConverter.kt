@@ -1,4 +1,4 @@
-package com.mog.bondoman.model.converters
+package com.mog.bondoman.data.model
 
 import android.location.Location
 import androidx.room.TypeConverter

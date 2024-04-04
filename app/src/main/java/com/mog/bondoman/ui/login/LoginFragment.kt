@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -17,28 +16,16 @@ import androidx.navigation.fragment.findNavController
 import com.mog.bondoman.R
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
-    private lateinit var sessionManager: SessionManager
+    @Inject
+    lateinit var sessionManager: SessionManager
     private lateinit var loginViewModel: LoginViewModel
     private var _binding: FragmentLoginBinding? = null
-//    private val broadcastReceiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context?, intent: Intent?) {
-//            Log.d("Broadcast receiver", "receive")
-//            if (intent?.action == "TOKEN_CHECK") {
-//                val isValid = intent.getBooleanExtra("TOKEN_CHECK_IS_VALID", false)
-//                val checkToken = intent.getStringExtra("TOKEN_CHECK_TOKEN")
-//                val checkNim = intent.getStringExtra("TOKEN_CHECK_NIM")
-//
-//                Log.d("Broadcast receiver", "token ${checkToken ?: "no token"}")
-//                Log.d("Broadcast receiver", "nim ${checkNim ?: "no nim"}")
-////                if (isValid) {
-////                    findNavController().navigate(R.id.navigate_to_home)
-////                }
-//            }
-//        }
-//    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -48,7 +35,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -56,12 +43,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        sessionManager = SessionManager.getInstance(
-            requireActivity().applicationContext.getSharedPreferences(
-                SessionManager.PREF_KEY,
-                AppCompatActivity.MODE_PRIVATE
-            )
-        )
 
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext()))
             .get(LoginViewModel::class.java)
@@ -98,10 +79,20 @@ class LoginFragment : Fragment() {
             })
 
         loginViewModel.credentials.observe(viewLifecycleOwner,
-            Observer { creds ->
-                creds ?: return@Observer
-                if (creds.nim.isNotEmpty() && creds.token.isNotEmpty()) {
-                    sessionManager.saveAuthToken(creds.nim, creds.token)
+            Observer { credential ->
+                credential ?: return@Observer
+                if (credential.nim.isNotEmpty() && credential.token.isNotEmpty()) {
+                    sessionManager.saveAuthToken(credential.nim, credential.token)
+                }
+            })
+
+        sessionManager.isValidSession.observe(viewLifecycleOwner,
+            Observer { isValid ->
+                if (isValid) {
+                    val nim = sessionManager.fetchNim()
+                    updateUiWithUser(LoggedInUserView(nim!!))
+                } else {
+                    return@Observer
                 }
             })
 
@@ -140,29 +131,11 @@ class LoginFragment : Fragment() {
                 passwordEditText.text.toString()
             )
         }
-
-        val token = sessionManager.fetchAuthToken()
-        if (token != null) {
-//            TODO validate JWT from service?
-            val nim = sessionManager.fetchNim()!!
-            updateUiWithUser(LoggedInUserView(nim))
-        }
     }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        requireActivity().registerReceiver(
-//            this.broadcastReceiver,
-//            IntentFilter("TOKEN_CHECK"),
-//            null,
-//            null,
-//            Context.RECEIVER_NOT_EXPORTED
-//        )
-//    }
 
     private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
+        val welcome = getString(R.string.welcome) + " " + model.displayName
+
         val appContext = context?.applicationContext ?: return
         Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
 
