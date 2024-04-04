@@ -1,7 +1,7 @@
 package com.mog.bondoman.ui.settings
 
-import android.content.Intent
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.OutputStream
 import javax.inject.Inject
@@ -142,16 +143,10 @@ class SettingsFragment : Fragment() {
                 val transactionData = transactionViewModel.transactions
                 val dataSnapshot = transactionData.value
 
-                // todo: fix for xls
-
-                // create temp excel file
+                // create excel workbook
                 // https://www.baeldung.com/kotlin/excel-read-write
-                val workbook = XSSFWorkbook()
+                val workbook = if (isXls) HSSFWorkbook() else XSSFWorkbook()
                 val worksheet = workbook.createSheet()
-//        val headerRowStyle = workbook.createCellStyle()
-//        headerRowStyle.fillForegroundColor = IndexedColors.YELLOW.index
-//        headerRowStyle.fillPattern = FillPatternType.SOLID_FOREGROUND
-
 
                 withContext(Dispatchers.Default) {
                     // setup header for table
@@ -168,7 +163,6 @@ class SettingsFragment : Fragment() {
                     columnAttributes.forEachIndexed { index, value ->
                         val headerCell = headerRow.createCell(index)
                         headerCell.setCellValue(value)
-//                headerCell.cellStyle = headerRowStyle
                     }
 
 
@@ -184,6 +178,7 @@ class SettingsFragment : Fragment() {
                     }
                 }
 
+                // write excel to output stream
                 withContext(Dispatchers.IO) {
                     workbook.write(output)
                     workbook.close()
