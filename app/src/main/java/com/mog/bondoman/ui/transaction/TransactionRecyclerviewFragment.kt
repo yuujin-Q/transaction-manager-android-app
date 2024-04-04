@@ -10,9 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.mog.bondoman.R
+import com.mog.bondoman.TransactionReceiver
 import com.mog.bondoman.databinding.FragmentTransactionRecyclerviewBinding
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TransactionRecyclerviewFragment : Fragment(), TransactionRecyclerViewOnClickListener {
+    @Inject
+    lateinit var transactionReceiver: TransactionReceiver
+
     private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
     private var _binding: FragmentTransactionRecyclerviewBinding? = null
 
@@ -31,6 +38,7 @@ class TransactionRecyclerviewFragment : Fragment(), TransactionRecyclerViewOnCli
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        transactionReceiver.setDestinationNavController(findNavController())
 
         transactionViewModel.clearOngoingUpdate()
         val recyclerView = binding.transactionRecyclerview

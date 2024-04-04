@@ -3,35 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transaction_navigation"
-    app:startDestination="@id/nav_transaction_recyclerview">
+    app:startDestination="@id/transactionRecyclerviewFragment">
 
     <fragment
-        android:id="@+id/nav_transaction_recyclerview"
+        android:id="@+id/transactionRecyclerviewFragment"
         android:name="com.mog.bondoman.ui.transaction.TransactionRecyclerviewFragment"
         android:label="fragment_transaction"
         tools:layout="@layout/fragment_transaction_recyclerview">
         <action
             android:id="@+id/action_transactionRecyclerviewFragment_to_addTransactionFragment"
-            app:destination="@id/nav_add_transaction"
+            app:destination="@id/addTransactionFragment"
             app:restoreState="true" />
         <action
             android:id="@+id/action_transactionRecyclerviewFragment_to_editTransactionFragment"
-            app:destination="@id/nav_edit_transaction"
+            app:destination="@id/editTransactionFragment"
             app:restoreState="true" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_add_transaction"
+        android:id="@+id/addTransactionFragment"
         android:name="com.mog.bondoman.ui.transaction.modify.AddTransactionFragment"
         android:label="AddTransactionFragment"
         tools:layout="@layout/fragment_add_transaction">
         <action
             android:id="@+id/action_addTransactionFragment_to_transactionRecyclerviewFragment"
-            app:destination="@id/nav_transaction_recyclerview" />
+            app:destination="@id/transactionRecyclerviewFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/nav_edit_transaction"
+        android:id="@+id/editTransactionFragment"
         android:name="com.mog.bondoman.ui.transaction.modify.EditTransactionFragment"
         android:label="EditTransactionFragment"
         tools:layout="@layout/fragment_edit_transaction">
@@ -40,6 +40,6 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_editTransactionFragment_to_transactionRecyclerviewFragment"
-            app:destination="@id/nav_transaction_recyclerview" />
+            app:destination="@id/transactionRecyclerviewFragment" />
     </fragment>
 </navigation>

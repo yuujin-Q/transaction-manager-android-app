@@ -41,6 +41,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver
+            android:name=".TransactionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.mog.bondoman.ADD_TRANSACTION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

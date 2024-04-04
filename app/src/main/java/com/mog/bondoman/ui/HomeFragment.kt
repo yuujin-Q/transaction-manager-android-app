@@ -1,5 +1,7 @@
 package com.mog.bondoman.ui
 
+import android.content.Context
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.mog.bondoman.R
+import com.mog.bondoman.TransactionReceiver
 import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.databinding.FragmentHomeBinding
 import com.mog.bondoman.ui.transaction.TransactionViewModel
@@ -30,12 +33,24 @@ import javax.inject.Inject
  */
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
+
+    @Inject
+    lateinit var transactionReceiver: TransactionReceiver
+    private val transactionIntentFilter = IntentFilter("com.mog.bondoman.ADD_TRANSACTION")
+
     private lateinit var binding: FragmentHomeBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     @Inject
     lateinit var sessionManager: SessionManager
     private val transactionViewModel: TransactionViewModel by activityViewModels<TransactionViewModel>()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        transactionReceiver.attachFragment(this)
+        this.requireActivity().registerReceiver(transactionReceiver, transactionIntentFilter)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,7 +75,10 @@ class HomeFragment : Fragment() {
         binding.navView.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graph, R.id.nav_settings
+                    R.id.transactionFragment,
+                    R.id.scanFragment,
+                    R.id.graphFragment,
+                    R.id.settingsFragment
                 ),
                 binding.drawerLayout
             )
@@ -72,7 +90,7 @@ class HomeFragment : Fragment() {
         binding.appBarMain.contentMain.bottomNavView?.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.nav_transaction, R.id.nav_scan, R.id.nav_graph
+                    R.id.transactionFragment, R.id.scanFragment, R.id.graphFragment
                 )
             )
             binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)
@@ -97,6 +115,11 @@ class HomeFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             transactionViewModel.fetchData()
         }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        requireActivity().unregisterReceiver(transactionReceiver)
     }
 
     companion object {
