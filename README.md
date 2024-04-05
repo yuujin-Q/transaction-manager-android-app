@@ -18,6 +18,17 @@ to convert these instructions to use with your preferred toolchain.
 
 # Screenshots
 
+
+# Accessiblity Check
+Code inspection on Android Studio shows the following accessibility issue, which is the missing alt-text on dialog_image_preview.
+![Alt text missing](accessibility/image.png)
+
+Problem lies on this highlighted part of ImageView tag.
+![alt text missing](accessibility/image-1.png)
+
+Quick fix for this issue is as shown below.
+![fixed alt text](accessibility/image-2.png)
+
 ## What's contained in this project
 
 ### Libraries
