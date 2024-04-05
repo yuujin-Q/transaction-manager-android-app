@@ -84,20 +84,6 @@ class HomeFragment : Fragment() {
 
         binding.appBarMain.toolbar.inflateMenu(R.menu.overflow)
 
-        binding.navView.let {
-            appBarConfiguration = AppBarConfiguration(
-                setOf(
-                    R.id.transactionFragment,
-                    R.id.scanFragment,
-                    R.id.graphFragment,
-                    R.id.settingsFragment
-                ),
-                binding.drawerLayout
-            )
-
-            binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)
-            it.setupWithNavController(navControl)
-        }
 
         binding.appBarMain.contentMain.bottomNavView.let {
             appBarConfiguration = AppBarConfiguration(
