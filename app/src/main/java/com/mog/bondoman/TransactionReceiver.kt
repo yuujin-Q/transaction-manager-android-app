@@ -46,7 +46,7 @@ class TransactionReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         ongoingNavigation = true
-        Toast.makeText(context, "ambatublow", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Randomize", Toast.LENGTH_SHORT).show()
 
         args = intent.extras!!
 

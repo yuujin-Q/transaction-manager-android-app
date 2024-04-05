@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -62,7 +63,7 @@ class ScanFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
-                val imageBitmap = data?.extras?.get("data") as Bitmap
+                @Suppress("DEPRECATION") val imageBitmap = data?.extras?.get("data") as Bitmap
                 showImagePreviewDialog(imageBitmap) // Show the image preview dialog
             } else {
                 Toast.makeText(requireContext(), "Failed to capture image", Toast.LENGTH_SHORT)
@@ -176,8 +177,10 @@ class ScanFragment : Fragment() {
         takePhotoButton.setOnClickListener {
             imageCapture?.let { capture ->
                 // Membuat file untuk menyimpan gambar yang diambil
+                val externalMediaDir =
+                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                 val photoFile = File(
-                    requireContext().externalMediaDirs.firstOrNull(),
+                    externalMediaDir,
                     "${System.currentTimeMillis()}.jpg"
                 )
 

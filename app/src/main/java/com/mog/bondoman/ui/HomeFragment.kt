@@ -99,7 +99,7 @@ class HomeFragment : Fragment() {
             it.setupWithNavController(navControl)
         }
 
-        binding.appBarMain.contentMain.bottomNavView?.let {
+        binding.appBarMain.contentMain.bottomNavView.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.transactionFragment, R.id.scanFragment, R.id.graphFragment
