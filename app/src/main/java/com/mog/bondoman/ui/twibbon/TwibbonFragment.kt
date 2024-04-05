@@ -9,6 +9,7 @@ import android.graphics.Canvas
 import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -67,7 +68,7 @@ class TwibbonFragment : Fragment() {
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
-        cameraProviderFuture.addListener(Runnable {
+        cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
             imageCapture = ImageCapture.Builder()
@@ -108,8 +109,10 @@ class TwibbonFragment : Fragment() {
 
         takePhotoButton.setOnClickListener {
             imageCapture?.let { capture ->
+                val externalMediaDir =
+                    requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                 val photoFile = File(
-                    requireContext().externalMediaDirs.firstOrNull(),
+                    externalMediaDir,
                     "${System.currentTimeMillis()}.jpg"
                 )
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
@@ -138,14 +141,14 @@ class TwibbonFragment : Fragment() {
 
         if (!hasRequiredPermissions()) {
             ActivityCompat.requestPermissions(
-                requireActivity(), TwibbonFragment.CAMERAX_PERMISSIONS, 0
+                requireActivity(), CAMERAX_PERMISSIONS, 0
             )
         }
     }
 
 
     private fun hasRequiredPermissions(): Boolean {
-        return TwibbonFragment.CAMERAX_PERMISSIONS.all {
+        return CAMERAX_PERMISSIONS.all {
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 it
