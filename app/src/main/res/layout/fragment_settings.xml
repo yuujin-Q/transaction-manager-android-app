@@ -3,36 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context=".ui.settings.SettingsFragment">
 
     <Button
-        android:id="@+id/save_transactions_xls"
+        android:id="@+id/save_transactions"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
         android:layout_marginEnd="24dp"
         android:text="@string/save_transactions_xls"
-        app:layout_constraintBottom_toTopOf="@+id/save_transactions_xlsx"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/save_transactions_xlsx"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="24dp"
-        android:text="@string/save_transactions_xlsx"
         app:layout_constraintBottom_toTopOf="@+id/send_transaction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
         android:id="@+id/send_transaction"
@@ -41,22 +28,69 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:text="@string/send_transactions"
-        app:layout_constraintBottom_toTopOf="@+id/logout"
+        app:layout_constraintBottom_toTopOf="@+id/file_format"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/save_transactions_xlsx" />
+        app:layout_constraintTop_toBottomOf="@+id/save_transactions" />
+
+    <Button
+        android:id="@+id/randomize_transactions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/randomize_transaksi"
+        app:layout_constraintBottom_toTopOf="@+id/file_format"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/file_format"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <RadioGroup
+        android:id="@+id/file_format"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:checkedButton="@id/xls"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/logout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/send_transaction">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/file_format_select_text" />
+
+        <RadioButton
+            android:id="@+id/xls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/xls" />
+
+        <RadioButton
+            android:id="@+id/xlsx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/xlsx" />
+    </RadioGroup>
 
     <Button
         android:id="@+id/logout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="24dp"
+        android:backgroundTint="@color/red"
         android:text="@string/logout"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/send_transaction" />
+        app:layout_constraintTop_toBottomOf="@+id/randomize_transactions"
+        app:layout_constraintVertical_bias="0.75" />
 </androidx.constraintlayout.widget.ConstraintLayout>

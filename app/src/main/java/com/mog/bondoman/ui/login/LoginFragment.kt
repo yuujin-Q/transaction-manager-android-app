@@ -44,14 +44,16 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext()))
-            .get(LoginViewModel::class.java)
+        loginViewModel =
+            ViewModelProvider(this, LoginViewModelFactory(requireContext(), sessionManager))
+                .get(LoginViewModel::class.java)
 
         val usernameEditText = binding.username
         val passwordEditText = binding.password
         val loginButton = binding.login
         val loadingProgressBar = binding.loading
 
+        // field validation observer
         loginViewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
                 if (loginFormState == null) {
@@ -66,6 +68,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
+        // login result validation
         loginViewModel.loginResult.observe(viewLifecycleOwner,
             Observer { loginResult ->
                 loginResult ?: return@Observer
@@ -78,6 +81,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
+        // logged in user
         loginViewModel.credentials.observe(viewLifecycleOwner,
             Observer { credential ->
                 credential ?: return@Observer
@@ -86,12 +90,21 @@ class LoginFragment : Fragment() {
                 }
             })
 
+        // session manager
         sessionManager.isValidSession.observe(viewLifecycleOwner,
             Observer { isValid ->
                 if (isValid) {
                     val nim = sessionManager.fetchNim()
                     updateUiWithUser(LoggedInUserView(nim!!))
+                    binding.login.visibility = View.VISIBLE
+                    binding.password.visibility = View.VISIBLE
+                    binding.username.visibility = View.VISIBLE
+                    binding.loading.visibility = View.GONE
                 } else {
+                    binding.login.visibility = View.VISIBLE
+                    binding.password.visibility = View.VISIBLE
+                    binding.username.visibility = View.VISIBLE
+                    binding.loading.visibility = View.GONE
                     return@Observer
                 }
             })
@@ -130,6 +143,13 @@ class LoginFragment : Fragment() {
                 usernameEditText.text.toString(),
                 passwordEditText.text.toString()
             )
+        }
+
+        if (!sessionManager.fetchNim().isNullOrEmpty()) {
+            binding.login.visibility = View.GONE
+            binding.password.visibility = View.GONE
+            binding.username.visibility = View.GONE
+            binding.loading.visibility = View.VISIBLE
         }
     }
 

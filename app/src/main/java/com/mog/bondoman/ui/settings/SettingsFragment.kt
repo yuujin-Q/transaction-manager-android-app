@@ -1,6 +1,7 @@
 package com.mog.bondoman.ui.settings
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.mog.bondoman.R
@@ -27,6 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
+import java.io.File
 import java.io.OutputStream
 import javax.inject.Inject
 
@@ -44,7 +47,6 @@ class SettingsFragment : Fragment() {
                     var isSuccess: Boolean
                     CoroutineScope(Dispatchers.IO).launch {
                         val ostream = requireActivity().contentResolver.openOutputStream(uri)
-
 
                         if (ostream != null) {
                             isSuccess = saveTransactions(ostream).await()
@@ -80,22 +82,27 @@ class SettingsFragment : Fragment() {
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
 
-
         binding.logout.setOnClickListener {
             onLogoutClick()
         }
-        binding.saveTransactionsXls.setOnClickListener {
-            isXls = true
+        binding.saveTransactions.setOnClickListener {
             onSaveTransactionsClick()
         }
-        binding.saveTransactionsXlsx.setOnClickListener {
-            isXls = false
-            onSaveTransactionsClick()
-        }
-
         binding.sendTransaction.setOnClickListener {
+            mailTransactions()
+        }
+        binding.randomizeTransactions.setOnClickListener {
             broadcastRandomTransaction()
         }
+
+        binding.xls.setOnCheckedChangeListener { _, isChecked ->
+            Log.d(
+                "Settings File Format",
+                if (isChecked) getString(R.string.xls) else getString(R.string.xlsx)
+            )
+            isXls = isChecked
+        }
+        isXls = binding.xls.isChecked
 
         return binding.root
     }
@@ -123,6 +130,49 @@ class SettingsFragment : Fragment() {
 
     private fun onLogoutClick() {
         sessionManager.removeAuthToken()
+    }
+
+    private fun mailTransactions() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val filename = "transactionSnapshot" + if (isXls) ".xls" else ".xlsx"
+            val ostream = requireContext().openFileOutput(filename, Context.MODE_PRIVATE)
+
+            if (ostream != null) {
+                val isSuccess = saveTransactions(ostream).await()
+                ostream.close()
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        if (isSuccess) getString(R.string.save_transactions_success) else getString(
+                            R.string.save_transactions_fail
+                        ),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                if (isSuccess) {// start intent
+                    val uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "${requireContext().packageName}.provider",
+                        File(requireContext().filesDir, filename)
+                    )
+                    val emailIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "*/*"
+                        putExtra(Intent.EXTRA_SUBJECT, "Bondoman Money Laundering")
+                        putExtra(
+                            Intent.EXTRA_STREAM,
+                            uri
+                        )
+                        putExtra(Intent.EXTRA_TEXT, "Jangan kirim dokumen ini kepada OJK!")
+                    }
+
+                    if (emailIntent.resolveActivity(requireContext().packageManager) != null) {
+                        startActivity(emailIntent)
+                    }
+                }
+            }
+        }
     }
 
     private fun broadcastRandomTransaction() {
@@ -165,7 +215,6 @@ class SettingsFragment : Fragment() {
                         headerCell.setCellValue(value)
                     }
 
-
                     // fill worksheet with values of transactions
                     dataSnapshot?.forEachIndexed { index, transaction ->
                         val transactionRow = worksheet.createRow(index + 1)
@@ -187,10 +236,11 @@ class SettingsFragment : Fragment() {
                 return@async true
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.e("Settings Save Transactions", e.message ?: "Error")
+
 
                 return@async false
             }
         }
-
     }
 }

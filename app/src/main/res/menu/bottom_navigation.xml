@@ -6,15 +6,21 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@id/transactionFragment"
-            android:icon="@drawable/ic_slideshow_black_24dp"
+            android:icon="@drawable/transaction_record_10"
             android:title="@string/menu_transaction" />
+
+        <item
+            android:id="@+id/nav_twibbon"
+            android:icon="@drawable/ic_camera_black_24dp"
+            android:title="@string/menu_twibbon" />
+
         <item
             android:id="@id/scanFragment"
-            android:icon="@drawable/ic_camera_black_24dp"
+            android:icon="@drawable/scan_161"
             android:title="@string/menu_scan" />
         <item
             android:id="@id/graphFragment"
-            android:icon="@drawable/ic_gallery_black_24dp"
+            android:icon="@drawable/chart_pie_10"
             android:title="@string/menu_graph" />
         <item
             android:id="@id/settingsFragment"

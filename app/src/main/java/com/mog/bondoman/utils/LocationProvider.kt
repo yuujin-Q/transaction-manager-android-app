@@ -86,31 +86,4 @@ class LocationProvider private constructor(context: Context) {
                     PackageManager.PERMISSION_GRANTED
         }
     }
-
-//    private val locationPermissionRequest = registerForActivityResult(
-//        ActivityResultContracts.RequestMultiplePermissions()
-//    ) { permissions ->
-//        when {
-//            permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
-//                // Precise location access granted.
-//            }
-//
-//            permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
-//                // Only approximate location access granted.
-//            }
-//
-//            else -> {
-//                // No location access granted.
-//            }
-//        }
-//    }
-
-    //    fun checkLocationPermission() {
-//        locationPermissionRequest.launch(
-//            arrayOf(
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//            )
-//        )
-//    }
 }

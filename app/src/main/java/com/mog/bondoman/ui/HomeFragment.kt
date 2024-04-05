@@ -82,27 +82,15 @@ class HomeFragment : Fragment() {
             binding.appBarMain.contentMain.navHostFragmentContentMain.getFragment<NavHostFragment>()
         val navControl = navHostFrag.navController
 
-        binding.appBarMain.toolbar.inflateMenu(R.menu.overflow)
 
-        binding.navView.let {
+        binding.appBarMain.contentMain.bottomNavView.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
                     R.id.transactionFragment,
                     R.id.scanFragment,
                     R.id.graphFragment,
-                    R.id.settingsFragment
-                ),
-                binding.drawerLayout
-            )
-
-            binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)
-            it.setupWithNavController(navControl)
-        }
-
-        binding.appBarMain.contentMain.bottomNavView?.let {
-            appBarConfiguration = AppBarConfiguration(
-                setOf(
-                    R.id.transactionFragment, R.id.scanFragment, R.id.graphFragment
+                    R.id.settingsFragment,
+                    R.id.nav_twibbon
                 )
             )
             binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)

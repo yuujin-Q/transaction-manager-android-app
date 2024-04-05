@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mog.bondoman.R
 import com.mog.bondoman.data.model.Transaction
+import com.mog.bondoman.utils.ValueViewConverter
 import java.util.Date
 
 class TransactionInputViewModel : ViewModel() {
@@ -17,14 +18,15 @@ class TransactionInputViewModel : ViewModel() {
         val title = transactionInputBinding.titleEditText.text.toString()
         val category = transactionInputBinding.categoryEditText.text.toString()
         val nominal = transactionInputBinding.nominalEditText.text.toString()
+        // TODO? geotag
 //        val location = transactionInputBinding.locationEditText.text.toString()
         if (title.isBlank()) {
             _transactionFormState.value = TransactionFormState(titleError = R.string.empty_field)
         } else if (category.isBlank()) {
             _transactionFormState.value = TransactionFormState(categoryError = R.string.empty_field)
-        } else if (checkPositiveNominal(nominal)) {
+        } else if (checkNominalInvalid(nominal)) {
             _transactionFormState.value =
-                TransactionFormState(nominalError = R.string.invalid_positive_number)
+                TransactionFormState(nominalError = R.string.invalid_number)
 //        } else if (location.isBlank()) {
 //            _transactionFormState.value = TransactionFormState(locationError = R.string.empty_field)
         } else {
@@ -32,10 +34,9 @@ class TransactionInputViewModel : ViewModel() {
         }
     }
 
-    private fun checkPositiveNominal(nominal: String): Boolean {
-        if (nominal.isBlank()) return false
-        val doubleNominal = nominal.toDouble()
-        return doubleNominal.isNaN() or (doubleNominal < 0)
+    private fun checkNominalInvalid(nominal: String): Boolean {
+        val doubleNominal = nominal.toDoubleOrNull()
+        return doubleNominal == null || doubleNominal.isNaN() || doubleNominal.isInfinite()
     }
 
     companion object {
@@ -64,7 +65,11 @@ class TransactionInputViewModel : ViewModel() {
         ) {
             transactionInputBinding.titleEditText.setText(transaction.title)
             transactionInputBinding.categoryEditText.setText(transaction.category)
-            transactionInputBinding.nominalEditText.setText(transaction.nominal.toString())
+            transactionInputBinding.nominalEditText.setText(
+                ValueViewConverter.doubleToString(
+                    transaction.nominal
+                )
+            )
             transactionInputBinding.locationEditText.setText(transaction.location)
         }
 
@@ -88,6 +93,7 @@ class TransactionInputViewModel : ViewModel() {
             transaction: Transaction,
             transactionInputBinding: TransactionInputBinding
         ) {
+            // precondition: is valid transaction
             val title = transactionInputBinding.titleEditText.text.toString()
             val category = transactionInputBinding.categoryEditText.text.toString()
             val nominal = transactionInputBinding.nominalEditText.text.toString().toDouble()

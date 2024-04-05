@@ -6,15 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mog.bondoman.R
-import com.mog.bondoman.data.LoginRepository
 import com.mog.bondoman.data.Result
+import com.mog.bondoman.data.connection.SessionManager
 import com.mog.bondoman.data.model.LoggedInUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.net.UnknownHostException
 
-class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel(private val loginRepository: SessionManager) : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -24,6 +24,7 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
 
     private val _credentials = MutableLiveData<LoggedInUser>()
     val credentials: LiveData<LoggedInUser> = _credentials
+
 
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -39,24 +40,30 @@ class LoginViewModel(val loginRepository: LoginRepository) : ViewModel() {
                 }
 
                 is Result.Error -> {
-                    if (result.exception is HttpException) {
-                        _loginResult.postValue(
-                            LoginResult(
-                                error = if (result.exception.code() == 400) R.string.invalid_login else R.string.invalid_login_http
+                    when (result.exception) {
+                        is HttpException -> {
+                            _loginResult.postValue(
+                                LoginResult(
+                                    error = if (result.exception.code() == 400) R.string.invalid_login else R.string.invalid_login_http
+                                )
                             )
-                        )
-                    } else if (result.exception is UnknownHostException) {
-                        _loginResult.postValue(
-                            LoginResult(
-                                error = R.string.unknown_host
+                        }
+
+                        is UnknownHostException -> {
+                            _loginResult.postValue(
+                                LoginResult(
+                                    error = R.string.unknown_host
+                                )
                             )
-                        )
-                    } else {
-                        _loginResult.postValue(
-                            LoginResult(
-                                error = R.string.login_failed
+                        }
+
+                        else -> {
+                            _loginResult.postValue(
+                                LoginResult(
+                                    error = R.string.login_failed
+                                )
                             )
-                        )
+                        }
                     }
 
                     _credentials.postValue(LoggedInUser(nim = "", token = ""))
