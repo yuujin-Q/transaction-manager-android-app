@@ -1,6 +1,8 @@
 package com.mog.bondoman.ui.graph
 
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
@@ -35,6 +37,19 @@ class GraphFragment : Fragment() {
 
     lateinit var pieChart: PieChart
 
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    override fun onPause() {
+        super.onPause()
+
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,12 +68,8 @@ class GraphFragment : Fragment() {
         pieChart.setExtraOffsets(5f, 10f, 5f, 5f)
         pieChart.dragDecelerationFrictionCoef = 0.95f
         pieChart.isDrawHoleEnabled = true
-//        pieChart.holeColor = Color.WHITE
-//        pieChart.transparentCircleColor = Color.WHITE
-//        pieChart.transparentCircleAlpha = 110
         pieChart.holeRadius = 58f
         pieChart.transparentCircleRadius = 61f
-//        pieChart.isDrawCenterTextEnabled = true
         pieChart.rotationAngle = 0f
         pieChart.isRotationEnabled = true
         pieChart.isHighlightPerTapEnabled = true
