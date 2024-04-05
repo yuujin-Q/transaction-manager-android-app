@@ -3,35 +3,33 @@ package com.mog.bondoman.ui.twibbon
 import android.Manifest
 import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.mog.bondoman.R
-import android.graphics.Bitmap
-import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mog.bondoman.R
 import com.mog.bondoman.databinding.FragmentTwibbonBinding
-
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Matrix
-
 import java.io.File
 import java.io.IOException
 import kotlin.math.min
@@ -110,19 +108,29 @@ class TwibbonFragment : Fragment() {
 
         takePhotoButton.setOnClickListener {
             imageCapture?.let { capture ->
-                val photoFile = File(requireContext().externalMediaDirs.firstOrNull(), "${System.currentTimeMillis()}.jpg")
+                val photoFile = File(
+                    requireContext().externalMediaDirs.firstOrNull(),
+                    "${System.currentTimeMillis()}.jpg"
+                )
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
-                capture.takePicture(outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
-                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        val savedUri = Uri.fromFile(photoFile)
-                        showImagePreviewDialog(savedUri)
-                    }
+                capture.takePicture(
+                    outputOptions,
+                    ContextCompat.getMainExecutor(requireContext()),
+                    object : ImageCapture.OnImageSavedCallback {
+                        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                            val savedUri = Uri.fromFile(photoFile)
+                            showImagePreviewDialog(savedUri)
+                        }
 
-                    override fun onError(exception: ImageCaptureException) {
-                        Toast.makeText(requireContext(), "Failed to capture image: ${exception.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
+                        override fun onError(exception: ImageCaptureException) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to capture image: ${exception.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
             } ?: run {
                 Toast.makeText(requireContext(), "ImageCapture is null", Toast.LENGTH_SHORT).show()
             }
@@ -160,7 +168,7 @@ class TwibbonFragment : Fragment() {
         if (imageUri != null) {
             try {
                 val imageBitmap = BitmapFactory.decodeFile(imageUri.path)
-                val twibbonBitmap = BitmapFactory.decodeResource(resources, R.drawable.wibu) // Ganti R.drawable.twibbon dengan gambar twibbon yang sesuai
+                val twibbonBitmap = BitmapFactory.decodeResource(resources, R.drawable.wibu)
                 val resultBitmap = overlayBitmaps(imageBitmap, twibbonBitmap)
                 imageView.setImageBitmap(resultBitmap)
                 alertDialogBuilder.setView(imageView)
@@ -188,14 +196,21 @@ class TwibbonFragment : Fragment() {
 
         val matrix = Matrix()
         matrix.postRotate(90f)
-        val rotatedPhotoBitmap = Bitmap.createBitmap(photoBitmap, 0, 0, photoWidth, photoHeight, matrix, true)
+        val rotatedPhotoBitmap =
+            Bitmap.createBitmap(photoBitmap, 0, 0, photoWidth, photoHeight, matrix, true)
 
         val twibbonWidth = (min(rotatedPhotoBitmap.width, rotatedPhotoBitmap.height) * 0.8).toInt()
-        val twibbonHeight = (twibbonWidth.toFloat() / twibbonBitmap.width * twibbonBitmap.height).toInt()
+        val twibbonHeight =
+            (twibbonWidth.toFloat() / twibbonBitmap.width * twibbonBitmap.height).toInt()
 
-        val twibbonResized = Bitmap.createScaledBitmap(twibbonBitmap, twibbonWidth, twibbonHeight, false)
+        val twibbonResized =
+            Bitmap.createScaledBitmap(twibbonBitmap, twibbonWidth, twibbonHeight, false)
 
-        val resultBitmap = Bitmap.createBitmap(rotatedPhotoBitmap.width, rotatedPhotoBitmap.height, rotatedPhotoBitmap.config)
+        val resultBitmap = Bitmap.createBitmap(
+            rotatedPhotoBitmap.width,
+            rotatedPhotoBitmap.height,
+            rotatedPhotoBitmap.config
+        )
         val canvas = Canvas(resultBitmap)
 
         val photoX = (resultBitmap.width - rotatedPhotoBitmap.width) / 2
@@ -210,8 +225,6 @@ class TwibbonFragment : Fragment() {
     }
 
 
-
-
     private fun showResultDialog() {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
         alertDialogBuilder.setTitle("Twibbon")
@@ -223,6 +236,7 @@ class TwibbonFragment : Fragment() {
         }
         alertDialogBuilder.show()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

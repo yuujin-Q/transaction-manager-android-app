@@ -18,6 +18,7 @@ class TransactionInputViewModel : ViewModel() {
         val title = transactionInputBinding.titleEditText.text.toString()
         val category = transactionInputBinding.categoryEditText.text.toString()
         val nominal = transactionInputBinding.nominalEditText.text.toString()
+        // TODO? geotag
 //        val location = transactionInputBinding.locationEditText.text.toString()
         if (title.isBlank()) {
             _transactionFormState.value = TransactionFormState(titleError = R.string.empty_field)

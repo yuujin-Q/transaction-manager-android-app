@@ -171,15 +171,7 @@ class ScanFragment : Fragment() {
             )
         }
 
-        //val cameraSwitchButton = view.findViewById<Button>(R.id.camera_switch_button)
-        //val openGalleryButton = view.findViewById<Button>(R.id.open_gallery_button)
         val takePhotoButton = view.findViewById<Button>(R.id.take_photo_button)
-
-        //        cameraPreviewView.bindController(controller, viewLifecycleOwner)
-
-        //        cameraSwitchButton.setOnClickListener {
-        //            viewModel.toggleCamera()
-        //        }
 
         takePhotoButton.setOnClickListener {
             imageCapture?.let { capture ->
