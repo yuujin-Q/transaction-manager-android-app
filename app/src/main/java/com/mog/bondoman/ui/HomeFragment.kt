@@ -82,7 +82,6 @@ class HomeFragment : Fragment() {
             binding.appBarMain.contentMain.navHostFragmentContentMain.getFragment<NavHostFragment>()
         val navControl = navHostFrag.navController
 
-        binding.appBarMain.toolbar.inflateMenu(R.menu.overflow)
 
 
         binding.appBarMain.contentMain.bottomNavView.let {
