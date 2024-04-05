@@ -15,9 +15,29 @@ get Android Studio installed on your machine, so you can do development using
 the Android IDE. Other IDE options are possible, but not directly described or
 supported here. If you're using your own IDE, it should be fairly straightforward
 to convert these instructions to use with your preferred toolchain.
-
 # Screenshots
-
+![alt text](screenshots/308507.jpg)
+![alt text](screenshots/308512_0.jpg)
+![alt text](screenshots/308513_0.jpg)
+![alt text](screenshots/308514_0.jpg)
+![alt text](screenshots/308515_0.jpg)
+![alt text](screenshots/308516_0.jpg)
+![alt text](screenshots/308517.jpg)
+![alt text](screenshots/308518.jpg)
+![alt text](screenshots/308547_0.jpg)
+![alt text](screenshots/308548_0.jpg)
+![alt text](screenshots/308551_0.jpg)
+![alt text](screenshots/308552_0.jpg)
+![alt text](screenshots/308554_0.jpg)
+![alt text](screenshots/308555_0.jpg)
+![alt text](screenshots/308556_0.jpg)
+![alt text](screenshots/308557_0.jpg)
+![alt text](screenshots/308558_0.jpg)
+![alt text](screenshots/308559_0.jpg)
+![alt text](screenshots/308560_0.jpg)
+![alt text](screenshots/308561_0.jpg)
+![alt text](screenshots/308562_0.jpg)
+![alt text](screenshots/308563.jpg)
 
 # Accessiblity Check
 Code inspection on Android Studio shows the following accessibility issue, which is the missing alt-text on dialog_image_preview.
