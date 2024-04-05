@@ -30,12 +30,7 @@ class GraphFragment : Fragment() {
     private val transactionViewModel: TransactionViewModel by activityViewModels()
     private var _binding: FragmentGraphBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-
-    lateinit var pieChart: PieChart
+    private lateinit var pieChart: PieChart
 
     override fun onResume() {
         super.onResume()
