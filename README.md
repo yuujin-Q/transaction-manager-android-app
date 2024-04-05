@@ -40,3 +40,9 @@ You'll definitely want to read through the blog post since that walks you in det
 through a working production configuration using this model.
 
 # Work distribution
+
+| NIM      | Name                     | Work                                                                     | Total Time |
+| -------- | ------------------------ | ------------------------------------------------------------------------ | ---------- |
+| 13521067 | Yobel Dean Christopher   | Header-Navbar, Scan, Twibbon, Graph                                      | 69h        |
+| 13521074 | Eugene Yap Jin Quan      | Login, Logout, JWT Service, Save Excel File, Send Email, Network Sensing | 69h        |
+| 13521138 | Johann Christian Kandani | Transactions CRUD, Randomize Transactions                                | 69h        |
