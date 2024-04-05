@@ -83,11 +83,14 @@ class HomeFragment : Fragment() {
         val navControl = navHostFrag.navController
 
 
-
         binding.appBarMain.contentMain.bottomNavView.let {
             appBarConfiguration = AppBarConfiguration(
                 setOf(
-                    R.id.transactionFragment, R.id.scanFragment, R.id.graphFragment
+                    R.id.transactionFragment,
+                    R.id.scanFragment,
+                    R.id.graphFragment,
+                    R.id.settingsFragment,
+                    R.id.nav_twibbon
                 )
             )
             binding.appBarMain.toolbar.setupWithNavController(navControl, appBarConfiguration)
