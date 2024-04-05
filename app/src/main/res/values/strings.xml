@@ -68,6 +68,13 @@
     <string name="xls">XLS</string>
     <string name="file_format_select_text">File format:</string>
     <string name="randomize_transaksi">Randomize Transaksi</string>
+    <string name="income">PEMASUKAN</string>
+    <string name="expense">PENGELUARAN</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="open_other_camera">Open Other Camera</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="twibbon_frame">Twibbon Frame</string>
+    <string name="image_viewer">Image Viewer</string>
 
 
 </resources>
