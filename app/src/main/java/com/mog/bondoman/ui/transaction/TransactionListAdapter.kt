@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mog.bondoman.databinding.TransactionItemBinding
 import com.mog.bondoman.data.model.Transaction
+import com.mog.bondoman.databinding.TransactionItemBinding
 
 class TransactionListAdapter(private val transactionRecyclerViewOnClickListener: TransactionRecyclerViewOnClickListener) :
     ListAdapter<Transaction,
@@ -20,7 +20,7 @@ class TransactionListAdapter(private val transactionRecyclerViewOnClickListener:
         ) {
             binding.transaction = transaction
             // bind click to edit transaction
-            binding.transactionItemContainer.setOnClickListener() {
+            binding.transactionItemContainer.setOnClickListener {
                 transactionRecyclerViewOnClickListener.editTransaction(layoutPosition)
             }
 
