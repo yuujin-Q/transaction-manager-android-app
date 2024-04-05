@@ -3,81 +3,97 @@ package com.mog.bondoman.ui.scan
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.mog.bondoman.R
-import com.mog.bondoman.databinding.FragmentScanBinding
-import android.graphics.Bitmap
-import android.content.Intent
-import android.net.Uri
-import android.provider.MediaStore
-import android.util.Log
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
+import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.mog.bondoman.R
+import com.mog.bondoman.data.ScanPhotoRepository
+import com.mog.bondoman.data.connection.SessionManager
+import com.mog.bondoman.databinding.FragmentScanBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class ScanFragment : Fragment() {
 
     private lateinit var cameraPreviewView: PreviewView  // Change to PreviewView
     private var _binding: FragmentScanBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: ScanViewModel
     private lateinit var controller: LifecycleCameraController
 
     private var currentImageUri: Uri? = null
 
     private var imageCapture: ImageCapture? = null
 
+    @Inject
+    lateinit var sessionManager: SessionManager
 
-    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            val imageBitmap = data?.extras?.get("data") as Bitmap
-            showImagePreviewDialog(imageBitmap) // Show the image preview dialog
-        } else {
-            Toast.makeText(requireContext(), "Failed to capture image", Toast.LENGTH_SHORT).show()
+    private val takePictureLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                val imageBitmap = data?.extras?.get("data") as Bitmap
+                showImagePreviewDialog(imageBitmap) // Show the image preview dialog
+            } else {
+                Toast.makeText(requireContext(), "Failed to capture image", Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
-    }
 
     private val requestPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 dispatchTakePictureIntent()
             } else {
-                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
-    private val requestGalleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            data?.data?.let { uri ->
-                currentImageUri = uri
-                showImagePreviewDialog(uri)
+    private val requestGalleryLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                data?.data?.let { uri ->
+                    currentImageUri = uri
+                    showImagePreviewDialog(uri)
+                }
+            } else {
+                Toast.makeText(requireContext(), "Failed to open gallery", Toast.LENGTH_SHORT)
+                    .show()
             }
-        } else {
-            Toast.makeText(requireContext(), "Failed to open gallery", Toast.LENGTH_SHORT).show()
         }
-    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -89,7 +105,6 @@ class ScanFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
 
         binding.btnCamera.setOnClickListener {
             if (ContextCompat.checkSelfPermission(
@@ -116,13 +131,12 @@ class ScanFragment : Fragment() {
         }
         super.onViewCreated(view, savedInstanceState)
 
-        cameraPreviewView = view.findViewById<PreviewView>(R.id.camera_preview)!!
+        cameraPreviewView = view.findViewById(R.id.camera_preview)!!
 
-        viewModel = ViewModelProvider(this).get(ScanViewModel::class.java)
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
-        cameraProviderFuture.addListener(Runnable {
+        cameraProviderFuture.addListener({
             val cameraProvider = cameraProviderFuture.get()
 
             // Inisialisasi imageCapture
@@ -161,31 +175,41 @@ class ScanFragment : Fragment() {
         //val openGalleryButton = view.findViewById<Button>(R.id.open_gallery_button)
         val takePhotoButton = view.findViewById<Button>(R.id.take_photo_button)
 
-//        cameraPreviewView.bindController(controller, viewLifecycleOwner)
+        //        cameraPreviewView.bindController(controller, viewLifecycleOwner)
 
-//        cameraSwitchButton.setOnClickListener {
-//            viewModel.toggleCamera()
-//        }
+        //        cameraSwitchButton.setOnClickListener {
+        //            viewModel.toggleCamera()
+        //        }
 
         takePhotoButton.setOnClickListener {
             imageCapture?.let { capture ->
                 // Membuat file untuk menyimpan gambar yang diambil
-                val photoFile = File(requireContext().externalMediaDirs.firstOrNull(), "${System.currentTimeMillis()}.jpg")
+                val photoFile = File(
+                    requireContext().externalMediaDirs.firstOrNull(),
+                    "${System.currentTimeMillis()}.jpg"
+                )
 
                 // Membuat konfigurasi untuk menyimpan foto
                 val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
 
                 // Mengambil gambar menggunakan imageCapture
-                capture.takePicture(outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
-                    override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                        val savedUri = Uri.fromFile(photoFile)
-                        showImagePreviewDialog(savedUri)
-                    }
+                capture.takePicture(
+                    outputOptions,
+                    ContextCompat.getMainExecutor(requireContext()),
+                    object : ImageCapture.OnImageSavedCallback {
+                        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                            val savedUri = Uri.fromFile(photoFile)
+                            showImagePreviewDialog(savedUri)
+                        }
 
-                    override fun onError(exception: ImageCaptureException) {
-                        Toast.makeText(requireContext(), "Failed to capture image: ${exception.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
+                        override fun onError(exception: ImageCaptureException) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Failed to capture image: ${exception.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    })
             } ?: run {
                 Toast.makeText(requireContext(), "ImageCapture is null", Toast.LENGTH_SHORT).show()
             }
@@ -206,12 +230,14 @@ class ScanFragment : Fragment() {
             ) == PackageManager.PERMISSION_GRANTED
         }
     }
+
     companion object {
         val CAMERAX_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO,
         )
     }
+
     private fun requestCameraPermission() {
         requestPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
@@ -232,12 +258,23 @@ class ScanFragment : Fragment() {
         takePictureLauncher.launch(takePictureIntent)
     }
 
-    private fun uploadImageToServer(imageBitmap: Bitmap) {
-        // Simulate uploading image to server
-        viewModel.uploadImage(imageBitmap)
-        // Show result and ask for another scan
-        showResultDialog()
+    private fun uploadImageToServer(payload: File) {
+        // upload to image to server
+        if (sessionManager.fetchAuthToken().isNullOrEmpty()) return
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val isSuccess =
+                ScanPhotoRepository().uploadPhotos(sessionManager.fetchAuthToken()!!, payload)
+                    .await()
+
+            Log.d("Scan Photo", "Upload success? $isSuccess")
+            // Show result and ask for another scan
+            withContext(Dispatchers.Main) {
+                showResultDialog(isSuccess)
+            }
+        }
     }
+
     private fun showImagePreviewDialog(imageBitmap: Bitmap?) {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
         alertDialogBuilder.setTitle("Image Preview")
@@ -253,8 +290,13 @@ class ScanFragment : Fragment() {
         }
 
         alertDialogBuilder.setPositiveButton("Continue") { _, _ ->
+            val filePayload = File(requireContext().cacheDir, "file.jpg")
+            FileOutputStream(filePayload).use { ostream ->
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream)
+            }
+
             // Upload the image to the server
-            uploadImageToServer(imageBitmap)
+            uploadImageToServer(filePayload)
         }
         alertDialogBuilder.setNegativeButton("Cancel", null)
         alertDialogBuilder.show()
@@ -282,25 +324,34 @@ class ScanFragment : Fragment() {
 
         alertDialogBuilder.setPositiveButton("Continue") { _, _ ->
             // Handle scanning process here
-            // For example: pass the URI to a scanning function
-            // scanImage(imageUri)
-            showResultDialog()
+            val filePayload = File(requireContext().cacheDir, "file.jpg")
+            val istream = requireContext().contentResolver.openInputStream(imageUri)
+            val ostream = FileOutputStream(filePayload)
+            istream?.copyTo(ostream)
+            ostream.close()
+            istream?.close()
+            uploadImageToServer(filePayload)
         }
         alertDialogBuilder.setNegativeButton("Cancel", null)
         alertDialogBuilder.show()
     }
 
-    private fun showResultDialog() {
+    private fun showResultDialog(isSuccess: Boolean) {
         val alertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
         alertDialogBuilder.setTitle("Scan")
-        alertDialogBuilder.setMessage("Scan completed successfully.")
-        alertDialogBuilder.setNegativeButton("Cancel", null)
-        alertDialogBuilder.setNegativeButton("OK") { _, _ ->
+
+
+        val scanStatus = if (isSuccess) "Scan completed successfully" else "Scan failed"
+        val toastStatus = if (isSuccess) "Uploaded to server" else "Upload aborted"
+        alertDialogBuilder.setMessage(scanStatus)
+        alertDialogBuilder.setNegativeButton("Dismiss", null)
+        alertDialogBuilder.setPositiveButton("OK") { _, _ ->
             // Save to transaction list
-            Toast.makeText(requireContext(), "Saved to transaction list", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), toastStatus, Toast.LENGTH_SHORT).show()
         }
         alertDialogBuilder.show()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
