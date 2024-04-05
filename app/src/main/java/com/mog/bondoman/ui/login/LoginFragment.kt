@@ -81,7 +81,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
-        //
+        // logged in user
         loginViewModel.credentials.observe(viewLifecycleOwner,
             Observer { credential ->
                 credential ?: return@Observer
@@ -96,7 +96,15 @@ class LoginFragment : Fragment() {
                 if (isValid) {
                     val nim = sessionManager.fetchNim()
                     updateUiWithUser(LoggedInUserView(nim!!))
+                    binding.login.visibility = View.VISIBLE
+                    binding.password.visibility = View.VISIBLE
+                    binding.username.visibility = View.VISIBLE
+                    binding.loading.visibility = View.GONE
                 } else {
+                    binding.login.visibility = View.VISIBLE
+                    binding.password.visibility = View.VISIBLE
+                    binding.username.visibility = View.VISIBLE
+                    binding.loading.visibility = View.GONE
                     return@Observer
                 }
             })
@@ -135,6 +143,13 @@ class LoginFragment : Fragment() {
                 usernameEditText.text.toString(),
                 passwordEditText.text.toString()
             )
+        }
+
+        if (!sessionManager.fetchNim().isNullOrEmpty()) {
+            binding.login.visibility = View.GONE
+            binding.password.visibility = View.GONE
+            binding.username.visibility = View.GONE
+            binding.loading.visibility = View.VISIBLE
         }
     }
 

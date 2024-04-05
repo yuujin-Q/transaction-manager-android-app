@@ -1,6 +1,5 @@
 package com.mog.bondoman.data.connection
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
@@ -46,24 +45,22 @@ class SessionManager(context: Context) {
         prefs = context.getSharedPreferences(PREF_KEY, Context.MODE_PRIVATE)
     }
 
-    @SuppressLint("ApplySharedPref")
     fun saveAuthToken(nim: String, token: String) {
         val editor = prefs.edit()
         editor.putString(USER_TOKEN, token)
         editor.putString(NIM, nim)
-        editor.commit()
+        editor.apply()
 
         _isValidSession.postValue(true)
         Log.d("SessionMan save", this.fetchNim() ?: "empty nim on session")
         Log.d("SessionMan save", this.fetchAuthToken() ?: "empty token on session")
     }
 
-    @SuppressLint("ApplySharedPref")
     fun removeAuthToken() {
         val editor = prefs.edit()
         editor.remove(USER_TOKEN)
         editor.remove(NIM)
-        editor.commit()
+        editor.apply()
 
         _isValidSession.postValue(false)
         Log.d("SessionMan remove", this.fetchNim() ?: "empty nim on session")
