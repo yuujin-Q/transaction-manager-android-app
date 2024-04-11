@@ -12,8 +12,6 @@ class TransactionRepository(
     }
 
     suspend fun update(transaction: Transaction) {
-//        TODO UPDATE DATA
-//        TODO UPDATE LOCATION NAME
         transactionDB.transactionDao().update(transaction)
     }
 
